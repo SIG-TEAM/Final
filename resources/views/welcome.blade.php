@@ -61,6 +61,11 @@
                             featureType: "poi",
                             elementType: "labels",
                             stylers: [{ visibility: "off" }]
+                        },
+                        {
+                            featureType: "transit", // Menyembunyikan halte kendaraan umum
+                            elementType: "all",
+                            stylers: [{ visibility: "off" }]
                         }
                     ],
                     restriction: {
@@ -74,12 +79,15 @@
                     }
                 });
 
-                // Hapus marker jika tidak diperlukan
-                // const marker = new google.maps.Marker({
-                //     position: { lat: -6.9383, lng: 107.7190 },
-                //     map: map,
-                //     title: "Cileunyi Kulon",
-                // });
+                // Tambahkan event listener untuk klik pada peta
+                map.addListener("click", (event) => {
+                    // Buat marker baru di lokasi yang diklik
+                    new google.maps.Marker({
+                        position: event.latLng, // Lokasi klik
+                        map: map, // Tambahkan marker ke peta
+                        title: "Lokasi yang diklik"
+                    });
+                });
             }
         </script>
     </head>
