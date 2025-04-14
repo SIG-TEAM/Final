@@ -54,15 +54,39 @@
         <script>
             function initMap() {
                 const map = new google.maps.Map(document.getElementById('map'), {
-                    center: { lat: -7.250445, lng: 112.768845 }, // Ganti dengan koordinat wilayah Anda
-                    zoom: 10,
+                    center: { lat: -6.9383, lng: 107.7190 }, // Koordinat Cileunyi Kulon
+                    zoom: 10, // Zoom diperbesar untuk melihat area lebih luas
+                    styles: [
+                        {
+                            featureType: "poi",
+                            elementType: "labels",
+                            stylers: [{ visibility: "off" }]
+                        },
+                        {
+                            featureType: "transit", // Menyembunyikan halte kendaraan umum
+                            elementType: "all",
+                            stylers: [{ visibility: "off" }]
+                        }
+                    ],
+                    restriction: {
+                        latLngBounds: {
+                            north: -6.8583, // Batas utara (digeser lebih jauh ke utara)
+                            south: -7.0183, // Batas selatan (digeser lebih jauh ke selatan)
+                            west: 107.6390, // Batas barat (digeser lebih jauh ke barat)
+                            east: 107.7990  // Batas timur (digeser lebih jauh ke timur)
+                        },
+                        strictBounds: true // Membatasi peta agar tidak bisa digeser keluar area
+                    }
                 });
 
-                // Contoh marker
-                const marker = new google.maps.Marker({
-                    position: { lat: -7.250445, lng: 112.768845 },
-                    map: map,
-                    title: "Contoh Potensi Desa",
+                // Tambahkan event listener untuk klik pada peta
+                map.addListener("click", (event) => {
+                    // Buat marker baru di lokasi yang diklik
+                    new google.maps.Marker({
+                        position: event.latLng, // Lokasi klik
+                        map: map, // Tambahkan marker ke peta
+                        title: "Lokasi yang diklik"
+                    });
                 });
             }
         </script>
