@@ -1,4 +1,5 @@
 <x-guest-layout>
+
     <div class="w-full max-w-md mx-auto mt-10 bg-white shadow-md rounded-lg p-6">
         <h2 class="text-center text-2xl font-bold text-gray-800 mb-4">{{ __('Sign Up') }}</h2>
         <form method="POST" action="{{ route('register') }}">
@@ -67,6 +68,7 @@
                 {{ __('Already have an account?') }}
                 <a href="{{ route('login') }}" class="text-indigo-600 hover:underline">{{ __('Log In') }}</a>
             </p>
+
         </div>
-    </div>
+    </form>
 </x-guest-layout>
