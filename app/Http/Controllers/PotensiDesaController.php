@@ -7,10 +7,11 @@ use Illuminate\Http\Request;
 
 class PotensiDesaController extends Controller
 {
-    public function index()
+public function index()
+
     {
-        $potensiDesas = PotensiDesa::all();
-        return view('potensi-desa.index', compact('potensiDesas'));
+    $potensiDesa = PotensiDesa::all();
+    return view('potensidesa.index', compact('potensiDesa'));
     }
     
     public function show($id)

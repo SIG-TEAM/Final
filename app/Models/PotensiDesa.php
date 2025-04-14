@@ -13,11 +13,7 @@ class PotensiDesa extends Model
         'nama_potensi', 
         'kategori', 
         'deskripsi', 
-        'detail', 
-        'alamat', 
-        'desa', 
-        'latitude', 
-        'longitude',    
+        'detail',    
         'gambar'
     ];
 }

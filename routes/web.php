@@ -29,6 +29,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::resource('potensidesa', App\Http\Controllers\PotensiDesaController::class);
 Route::get('/potensi-desa', [PotensiDesaController::class, 'index'])->name('potensi-desa.index');
 Route::get('/potensi-desa/create', [PotensiDesaController::class, 'create'])->name('potensi-desa.create');
 Route::post('/potensi-desa', [PotensiDesaController::class, 'store'])->name('potensi-desa.store');
