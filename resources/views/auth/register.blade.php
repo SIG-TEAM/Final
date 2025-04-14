@@ -8,7 +8,7 @@
             <div class="mb-4">
                 <label for="name" class="block text-sm font-medium text-gray-700">{{ __('Name') }}</label>
                 <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-blue-500">
                 @error('name')
                     <span class="text-sm text-red-600">{{ $message }}</span>
                 @enderror
@@ -18,8 +18,22 @@
             <div class="mb-4">
                 <label for="email" class="block text-sm font-medium text-gray-700">{{ __('Email') }}</label>
                 <input id="email" type="email" name="email" value="{{ old('email') }}" required
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-blue-500">
                 @error('email')
+                    <span class="text-sm text-red-600">{{ $message }}</span>
+                @enderror
+            </div>
+
+            <!-- Role Selection -->
+            <div class="mb-4">
+                <label for="role" class="block text-sm font-medium text-gray-700">{{ __('Register as') }}</label>
+                <select id="role" name="role" required
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-blue-500">
+                    <option value="penduduk" {{ old('role') == 'penduduk' ? 'selected' : '' }}>Penduduk</option>
+                    <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                    <option value="pengurus" {{ old('role') == 'pengurus' ? 'selected' : '' }}>Pengurus</option>
+                </select>
+                @error('role')
                     <span class="text-sm text-red-600">{{ $message }}</span>
                 @enderror
             </div>
@@ -28,7 +42,7 @@
             <div class="mb-4">
                 <label for="password" class="block text-sm font-medium text-gray-700">{{ __('Password') }}</label>
                 <input id="password" type="password" name="password" required
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-blue-500">
                 @error('password')
                     <span class="text-sm text-red-600">{{ $message }}</span>
                 @enderror
@@ -38,14 +52,13 @@
             <div class="mb-4">
                 <label for="password_confirmation" class="block text-sm font-medium text-gray-700">{{ __('Confirm Password') }}</label>
                 <input id="password_confirmation" type="password" name="password_confirmation" required
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-blue-500">
             </div>
 
-            <div>
-                <button type="submit"
-                    class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+            <div class="flex items-center justify-center mt-4">
+                <x-primary-button class="w-full justify-center">
                     {{ __('Register') }}
-                </button>
+                </x-primary-button>
             </div>
         </form>
 

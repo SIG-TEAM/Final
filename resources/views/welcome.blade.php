@@ -115,6 +115,54 @@
                 background-color: #f9fafb;
             }
             
+            .user-menu {
+                position: relative;
+            }
+            
+            .user-btn {
+                background-color: white;
+                color: #166534;
+                font-weight: 600;
+                padding: 0.5rem 1rem;
+                border-radius: 4px;
+                text-decoration: none;
+                font-size: 0.9rem;
+                border: 1px solid #166534;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            
+            .dropdown-content {
+                display: none;
+                position: absolute;
+                right: 0;
+                top: 110%;
+                background-color: white;
+                min-width: 180px;
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+                border-radius: 6px;
+                padding: 0.5rem 0;
+                z-index: 100;
+            }
+            
+            .user-menu:hover .dropdown-content {
+                display: block;
+            }
+            
+            .dropdown-content a {
+                color: #374151;
+                padding: 0.5rem 1rem;
+                text-decoration: none;
+                display: block;
+                font-size: 0.9rem;
+            }
+            
+            .dropdown-content a:hover {
+                background-color: #f3f4f6;
+            }
+            
             /* Category bar styling */
             .category-bar {
                 display: flex;
@@ -580,8 +628,28 @@
             </div>
             
             <div class="navbar-right">
-                <a href="{{ route('register') }}" class="register-btn">Register</a>
-                <a href="{{ route('login') }}" class="login-btn">Login</a>
+                @auth
+                    <div class="user-menu">
+                        <button class="user-btn">
+                            {{ Auth::user()->name }}
+                            <span>▼</span>
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="/profile">Profile</a>
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <a href="{{ route('logout') }}"
+                                   onclick="event.preventDefault();
+                                            this.closest('form').submit();">
+                                    Log Out
+                                </a>
+                            </form>
+                        </div>
+                    </div>
+                @else
+                    <a href="{{ route('register') }}" class="register-btn">Register</a>
+                    <a href="{{ route('login') }}" class="login-btn">Login</a>
+                @endauth
             </div>
         </nav>
 
