@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PotensiDesaController;
+use App\Http\Controllers\PotensiAreaController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,5 +41,13 @@ Route::delete('/potensi-desa/{id}', [PotensiDesaController::class, 'destroy'])->
 
 Route::get('/peta-potensi-desa', [PotensiDesaController::class, 'map'])->name('potensi-desa.map');
 Route::get('/api/potensi-desa', [PotensiDesaController::class, 'getPotensiData'])->name('api.potensi-desa');
+
+Route::resource('potensi-area', PotensiAreaController::class);
+
+// Route untuk menampilkan halaman form PotensiArea
+Route::get('/potensi-area/create', [PotensiAreaController::class, 'create'])->name('potensi-area.create');
+
+// Route untuk menyimpan data PotensiArea
+Route::post('/potensi-area', [PotensiAreaController::class, 'store'])->name('potensi-area.store');
 
 require __DIR__.'/auth.php';
