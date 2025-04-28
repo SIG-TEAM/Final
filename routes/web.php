@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PotensiDesaController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\KategoriController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,5 +42,20 @@ Route::delete('/potensi-desa/{id}', [PotensiDesaController::class, 'destroy'])->
 
 Route::get('/peta-potensi-desa', [PotensiDesaController::class, 'map'])->name('potensi-desa.map');
 Route::get('/api/potensi-desa', [PotensiDesaController::class, 'getPotensiData'])->name('api.potensi-desa');
+
+// Admin routes group with auth middleware
+Route::middleware(['auth'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', function() {
+        return view('admin.index');
+    })->name('admin.dashboard');
+    
+    // Individual kategori routes instead of resource
+    Route::get('/kategori', [KategoriController::class, 'index'])->name('kategori.index');
+    Route::get('/kategori/create', [KategoriController::class, 'create'])->name('kategori.create');
+    Route::post('/kategori', [KategoriController::class, 'store'])->name('kategori.store');
+    Route::get('/kategori/{id}/edit', [KategoriController::class, 'edit'])->name('kategori.edit');
+    Route::put('/kategori/{id}', [KategoriController::class, 'update'])->name('kategori.update');
+    Route::delete('/kategori/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
+});
 
 require __DIR__.'/auth.php';

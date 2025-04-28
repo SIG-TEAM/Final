@@ -32,6 +32,9 @@
                          class="absolute right-0 top-[110%] w-[180px] bg-white rounded-md shadow-lg py-2 z-50"
                          style="display: none;">
                         <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 text-sm">Profile</a>
+                        @if(auth()->user()->role === 'admin')
+                            <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 text-sm">Admin Dashboard</a>
+                        @endif
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" class="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 text-sm">
