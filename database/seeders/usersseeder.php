@@ -1,4 +1,5 @@
 <?php
+
 namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -14,31 +15,40 @@ class usersseeder extends Seeder
      */
     public function run(): void
     {
-        try {
-            // First check if admin exists
-            if (User::where('email', 'admin@admin.com')->exists()) {
-                $this->command->info('Admin user already exists.');
-                return;
-            }
-
-            $user = User::create([
+        $users = [
+            [
                 'name' => 'Admin',
-                'email' => 'admin@admin.com',
+                'email' => 'admin@mail.com',
                 'password' => Hash::make('password'),
                 'role' => 'admin',
-            ]);
+            ],
+            [
+                'name' => 'penduduk',
+                'email' => 'penduduk@mail.com',
+                'password' => Hash::make('password'),
+                'role' => 'penduduk',
+            ],
+            [
+                'name' => 'pengurus',
+                'email' => 'Pengurus@mail.com',
+                'password' => Hash::make('password'),
+                'role' => 'pengurus',
+            ],
+            [
+                'name' => 'pengguna',
+                'email' => 'pengguna@mail.com',
+                'password' => Hash::make('password'),
+                'role' => 'pengguna',
+            ],
+        ];
 
-            if ($user) {
-                $this->command->info('Admin user created successfully.');
-                $this->command->info('Email: admin@admin.com');
-                $this->command->info('Password: password');
+        foreach ($users as $userData) {
+            // Check if user with this email already exists
+            if (!User::where('email', $userData['email'])->exists()) {
+                User::create($userData);
             } else {
-                throw new \Exception('Failed to create user record');
+                $this->command->info("User with email {$userData['email']} already exists, skipping...");
             }
-            
-        } catch (\Exception $e) {
-            $this->command->error('Error creating admin user: ' . $e->getMessage());
-            $this->command->error('Full error: ' . $e->getTraceAsString());
         }
     }
 }

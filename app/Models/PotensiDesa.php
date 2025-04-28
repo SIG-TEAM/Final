@@ -16,4 +16,9 @@ class PotensiDesa extends Model
         'detail',    
         'gambar'
     ];
+
+    public function kategori()
+    {
+        return $this->belongsTo(Kategori::class, 'kategori_id');
+    }
 }
