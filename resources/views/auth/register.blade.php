@@ -30,19 +30,8 @@
                 @enderror
             </div>
 
-            <!-- Role Selection -->
-            <div class="mb-4">
-                <label for="role" class="block text-sm font-medium text-gray-700">{{ __('Register as') }}</label>
-                <select id="role" name="role" required
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                    <option value="penduduk" {{ old('role') == 'penduduk' ? 'selected' : '' }}>Penduduk</option>
-                    <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
-                    <option value="pengurus" {{ old('role') == 'pengurus' ? 'selected' : '' }}>Pengurus</option>
-                </select>
-                @error('role')
-                    <span class="text-sm text-red-600">{{ $message }}</span>
-                @enderror
-            </div>
+            <!-- Hidden Role Input -->
+            <input type="hidden" name="role" value="pengguna" id="role">
 
             <!-- Password -->
             <div class="mb-4">

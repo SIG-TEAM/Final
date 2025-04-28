@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PotensiDesaController;
+use App\Http\Controllers\Admin\AdminController; 
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,5 +41,11 @@ Route::delete('/potensi-desa/{id}', [PotensiDesaController::class, 'destroy'])->
 
 Route::get('/peta-potensi-desa', [PotensiDesaController::class, 'map'])->name('potensi-desa.map');
 Route::get('/api/potensi-desa', [PotensiDesaController::class, 'getPotensiData'])->name('api.potensi-desa');
+
+// Add new admin routes with role middleware
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
+    Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
+    // Add more admin routes here as needed
+});
 
 require __DIR__.'/auth.php';
