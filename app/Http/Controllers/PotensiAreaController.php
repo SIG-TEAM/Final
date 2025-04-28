@@ -37,21 +37,24 @@ class PotensiAreaController extends Controller
     // Simpan data potensi baru
     public function store(Request $request)
     {
-        // Validasi input
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
             'kategori' => 'required|string|max:100',
             'deskripsi' => 'nullable|string',
-            'polygon' => 'required|json',
+            'polygon' => 'nullable|json',
+            'titik_potensi' => 'nullable|json',
             'foto' => 'nullable|image|max:2048',
         ]);
 
-        // Simpan file foto jika ada
+        // Validasi tambahan: pastikan polygon atau titik_potensi tidak keduanya kosong
+        if (empty($validated['polygon']) && empty($validated['titik_potensi'])) {
+            return back()->withErrors(['polygon' => 'Polygon atau Titik Potensi harus diisi.'])->withInput();
+        }
+
         if ($request->hasFile('foto')) {
             $validated['foto'] = $request->file('foto')->store('foto-potensi', 'public');
         }
 
-        // Simpan data ke database
         PotensiArea::create($validated);
 
         return redirect()->route('potensi-area.index')->with('success', 'Data potensi berhasil ditambahkan!');
@@ -77,13 +80,18 @@ class PotensiAreaController extends Controller
             'nama' => 'required|string|max:255',
             'kategori' => 'required|string|max:100',
             'deskripsi' => 'nullable|string',
-            'polygon' => 'required|json',
+            'polygon' => 'nullable|json',
+            'titik_potensi' => 'nullable|json',
             'foto' => 'nullable|image|max:2048',
         ]);
 
+        // Validasi tambahan: pastikan polygon atau titik_potensi tidak keduanya kosong
+        if (empty($validated['polygon']) && empty($validated['titik_potensi'])) {
+            return back()->withErrors(['polygon' => 'Polygon atau Titik Potensi harus diisi.'])->withInput();
+        }
+
         // Simpan file foto baru jika ada
         if ($request->hasFile('foto')) {
-            // Hapus foto lama jika ada
             if ($potensiArea->foto) {
                 Storage::disk('public')->delete($potensiArea->foto);
             }

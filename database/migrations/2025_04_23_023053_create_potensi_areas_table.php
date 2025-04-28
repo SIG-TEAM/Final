@@ -16,8 +16,9 @@ return new class extends Migration
             $table->string('nama');
             $table->string('kategori');
             $table->text('deskripsi')->nullable();
-            $table->json('polygon'); // Simpan koordinat sebagai array JSON
-            $table->string('foto')->nullable(); // Tambahkan kolom untuk menyimpan path foto
+            $table->string('foto')->nullable();
+            $table->json('polygon')->nullable();
+            $table->json('titik_potensi')->nullable();
             $table->timestamps();
         });
         

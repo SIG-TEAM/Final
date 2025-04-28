@@ -13,7 +13,13 @@ class PotensiArea extends Model
         'nama',
         'kategori',
         'deskripsi',
-        'polygon', // Pastikan kolom ini ada di database
-        'foto',    // Tambahkan kolom foto
+        'foto',
+        'polygon',
+        'titik_potensi',
+    ];
+
+    protected $casts = [
+        'polygon' => 'array',
+        'titik_potensi' => 'array',
     ];
 }
