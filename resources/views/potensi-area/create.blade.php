@@ -1,3 +1,6 @@
+@extends('layouts.app')
+
+@section('content')
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -19,25 +22,25 @@
             color: red;
         }
         .card-header {
-            background-color: #4CAF50; /* Hijau seperti di welcome.blade.php */
+            background-color:rgb(17, 54, 18); /* Hijau seperti di welcome.blade.php */
             color: white;
         }
         .btn-primary {
-            background-color: #4CAF50; /* Hijau */
+            background-color:rgb(27, 66, 28); /* Hijau */
             border-color: #4CAF50;
         }
         .btn-primary:hover {
-            background-color: #45A049; /* Hijau lebih gelap */
+            background-color:rgb(15, 43, 17); /* Hijau lebih gelap */
             border-color: #45A049;
         }
         .btn-secondary {
             background-color: #f3f4f6; /* Abu-abu terang */
-            color: #4CAF50; /* Hijau */
-            border-color: #4CAF50;
+            color:rgb(17, 49, 18); /* Hijau */
+            border-color:rgb(29, 73, 30);
         }
         .btn-secondary:hover {
             background-color: #e2e8f0; /* Abu-abu lebih terang */
-            color: #45A049; /* Hijau lebih gelap */
+            color:rgb(21, 53, 23); /* Hijau lebih gelap */
         }
     </style>
 </head>
@@ -94,6 +97,22 @@
                                 <textarea name="polygon" id="polygon-coords" hidden required></textarea>
                                 <div id="polygon-status" class="alert alert-warning d-none">
                                     Polygon belum dibuat. Silakan gambar area pada peta.
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="latitude" class="form-label required-label">Latitude</label>
+                                <input type="text" class="form-control" id="latitude" name="latitude" required>
+                                <div class="invalid-feedback">
+                                    Silakan masukkan latitude.
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="longitude" class="form-label required-label">Longitude</label>
+                                <input type="text" class="form-control" id="longitude" name="longitude" required>
+                                <div class="invalid-feedback">
+                                    Silakan masukkan longitude.
                                 </div>
                             </div>
                             
@@ -184,16 +203,36 @@
             document.getElementById('polygon-status').classList.add('alert-success');
             document.getElementById('polygon-status').innerHTML = 'Polygon berhasil dibuat. Area telah ditandai pada peta.';
             document.getElementById('polygon-status').classList.remove('d-none');
+
+            // Set latitude and longitude to the center of the polygon
+            var center = layer.getBounds().getCenter();
+            document.getElementById('latitude').value = center.lat;
+            document.getElementById('longitude').value = center.lng;
         });
 
         map.on('draw:deleted', function() {
             // Clear coordinates when polygon is deleted
             document.getElementById('polygon-coords').value = '';
+            document.getElementById('latitude').value = '';
+            document.getElementById('longitude').value = '';
             
             // Reset status
             document.getElementById('polygon-status').classList.remove('alert-success');
             document.getElementById('polygon-status').classList.add('alert-warning');
             document.getElementById('polygon-status').innerHTML = 'Polygon belum dibuat. Silakan gambar area pada peta.';
+            document.getElementById('polygon-status').classList.remove('d-none');
+        });
+
+        // Handle map click to set latitude and longitude
+        map.on('click', function(e) {
+            var latlng = e.latlng;
+            document.getElementById('latitude').value = latlng.lat;
+            document.getElementById('longitude').value = latlng.lng;
+
+            // Update status
+            document.getElementById('polygon-status').classList.remove('alert-warning');
+            document.getElementById('polygon-status').classList.add('alert-success');
+            document.getElementById('polygon-status').innerHTML = 'Titik koordinat berhasil ditentukan: ' + latlng.lat.toFixed(6) + ', ' + latlng.lng.toFixed(6);
             document.getElementById('polygon-status').classList.remove('d-none');
         });
 
@@ -204,3 +243,4 @@
     </script>
 </body>
 </html>
+@endsection

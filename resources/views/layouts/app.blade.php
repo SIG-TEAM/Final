@@ -17,6 +17,10 @@
         <!-- Alpine.js (for dropdown functionality) -->
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.12.3/dist/cdn.min.js"></script>
         
+        <!-- Leaflet.js -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        
         <!-- Additional styles for each page -->
         @yield('styles')
         

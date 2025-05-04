@@ -16,11 +16,12 @@ return new class extends Migration
             $table->string('nama');
             $table->string('kategori');
             $table->text('deskripsi')->nullable();
-            $table->json('polygon'); // Simpan koordinat sebagai array JSON
+            $table->decimal('latitude', 10, 8); // Tambahkan kolom latitude
+            $table->decimal('longitude', 11, 8); // Tambahkan kolom longitude
+            $table->json('polygon')->nullable(); // Simpan koordinat sebagai array JSON
             $table->string('foto')->nullable(); // Tambahkan kolom untuk menyimpan path foto
             $table->timestamps();
         });
-        
     }
 
     /**
