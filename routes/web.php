@@ -43,6 +43,9 @@ Route::delete('/potensi-desa/{id}', [PotensiDesaController::class, 'destroy'])->
 Route::get('/peta-potensi-desa', [PotensiDesaController::class, 'map'])->name('potensi-desa.map');
 Route::get('/api/potensi-desa', [PotensiDesaController::class, 'getPotensiData'])->name('api.potensi-desa');
 
+Route::get('/category/{category}', [PotensiDesaController::class, 'byCategory'])
+    ->name('category.show');
+
 // Admin routes group with auth middleware
 Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/dashboard', function() {

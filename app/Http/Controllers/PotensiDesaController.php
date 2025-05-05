@@ -3,15 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\PotensiDesa;
+use App\Models\Kategori;
 use Illuminate\Http\Request;
 
 class PotensiDesaController extends Controller
 {
-public function index()
-
+    public function index()
     {
-    $potensiDesa = PotensiDesa::all();
-    return view('potensidesa.index', compact('potensiDesa'));
+        $potensiDesa = PotensiDesa::all();
+        return view('potensidesa.index', compact('potensiDesa'));
     }
     
     public function show($id)
@@ -93,5 +93,19 @@ public function index()
     {
         $potensiDesas = PotensiDesa::all();
         return response()->json($potensiDesas);
+    }
+
+    /**
+     * Display potensi desa filtered by category
+     */
+    public function byCategory($category)
+    {
+        $kategori = Kategori::where('nama', 'LIKE', "%$category%")->firstOrFail();
+        $potensi = PotensiDesa::where('kategori_id', $kategori->id)->get();
+        
+        return view('welcome', [
+            'selectedCategory' => $kategori,
+            'potensi' => $potensi
+        ]);
     }
 }
