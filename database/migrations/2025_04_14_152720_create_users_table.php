@@ -18,6 +18,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('role')->default('user'); // default nya user
+            $table->string('status_permintaan')->nullable(); // status permintaan
             $table->rememberToken();
             $table->timestamps();
         });

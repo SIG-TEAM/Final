@@ -10,12 +10,18 @@
             </div>
         </div>
         
-        <!-- Center - Search -->
-        <div class="absolute transform -translate-x-1/2 left-1/2">
-            <div class="relative flex items-center">
-                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-sm text-gray-400">🔍</span>
-                <input type="text" placeholder="Search" 
-                       class="bg-gray-100 pl-10 pr-4 py-1 rounded-full border-0 text-sm w-[180px] focus:ring-0 focus:outline-none">
+        <!-- Category -->
+        <div class="flex items-center justify-center px-4 py-2">
+            <div class="flex items-center gap-4">
+                <x-nav-link :active="request()->is('/')" href="/">All</x-nav-link>
+                @foreach($categories as $category)
+                    <x-nav-link 
+                        :active="request()->is('category/' . strtolower($category->nama))" 
+                        href="{{ route('category.show', strtolower($category->nama)) }}"
+                    >
+                        {{ $category->nama }}
+                    </x-nav-link>
+                @endforeach
             </div>
         </div>
         
@@ -47,21 +53,6 @@
                 <a href="{{ route('register') }}" class="px-4 py-2 text-sm font-semibold text-green-800 bg-white border border-green-700 rounded hover:bg-gray-50">Register</a>
                 <a href="{{ route('login') }}" class="px-4 py-2 text-sm font-semibold text-white bg-green-800 rounded">Login</a>
             @endauth
-        </div>
-    </div>
-    
-    <!-- Category Navigation Row -->
-    <div class="flex items-center justify-center px-4 py-2">
-        <div class="flex items-center gap-4">
-            <x-nav-link :active="request()->is('/')" href="/">All</x-nav-link>
-            @foreach($categories as $category)
-                <x-nav-link 
-                    :active="request()->is('category/' . strtolower($category->nama))" 
-                    href="{{ route('category.show', strtolower($category->nama)) }}"
-                >
-                    {{ $category->nama }}
-                </x-nav-link>
-            @endforeach
         </div>
     </div>
 </nav>
