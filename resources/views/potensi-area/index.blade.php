@@ -131,10 +131,10 @@
         @foreach($potensiAreas as $area)
             @if($area->latitude && $area->longitude)
                 // Create marker
-                const marker = new google.maps.Marker({
+                const marker_{{ $area->id }} = new google.maps.Marker({
                     position: { 
-                        lat: parseFloat({{ $area->latitude }}), 
-                        lng: parseFloat({{ $area->longitude }}) 
+                        lat: parseFloat("{{ $area->latitude }}"), 
+                        lng: parseFloat("{{ $area->longitude }}") 
                     },
                     map: map,
                     title: "{{ $area->nama }}",
@@ -143,10 +143,10 @@
                         url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
                     }
                 });
-                markers.push(marker);
+                markers.push(marker_{{ $area->id }});
 
                 // Create info window with area details
-                const contentString = `
+                const contentString_{{ $area->id }} = `
                     <div class="info-window" style="width: 250px; padding: 10px;">
                         <h3 style="margin-top: 0; color: #1d4ed8; font-weight: bold;">{{ $area->nama }}</h3>
                         <p><strong>Kategori:</strong> {{ $area->kategori }}</p>
@@ -158,38 +158,38 @@
                     </div>
                 `;
 
-                const infoWindow = new google.maps.InfoWindow({
-                    content: contentString
+                const infoWindow_{{ $area->id }} = new google.maps.InfoWindow({
+                    content: contentString_{{ $area->id }}
                 });
-                infoWindows.push(infoWindow);
+                infoWindows.push(infoWindow_{{ $area->id }});
 
                 // Add click event to marker
-                marker.addListener("click", () => {
+                marker_{{ $area->id }}.addListener("click", () => {
                     // Close all open info windows
                     infoWindows.forEach(iw => iw.close());
                     
                     // Open this info window
-                    infoWindow.open(map, marker);
+                    infoWindow_{{ $area->id }}.open(map, marker_{{ $area->id }});
                     
                     // Center map on marker
-                    map.setCenter(marker.getPosition());
+                    map.setCenter(marker_{{ $area->id }}.getPosition());
                     map.setZoom(14);
                 });
 
                 // Handle polygon data if exists
                 @if($area->polygon)
                     try {
-                        // Parse polygon data (assuming it's stored as JSON array of coordinates)
-                        const polygonCoords = JSON.parse('{{ $area->polygon }}');
+                        // Parse polygon data safely
+                        const polygonData_{{ $area->id }} = {!! $area->polygon !!};
                         
                         // Create polygon path
-                        const polygonPath = polygonCoords.map(coord => {
+                        const polygonPath_{{ $area->id }} = polygonData_{{ $area->id }}.map(coord => {
                             return { lat: parseFloat(coord.lat), lng: parseFloat(coord.lng) };
                         });
                         
                         // Create polygon
-                        const polygon = new google.maps.Polygon({
-                            paths: polygonPath,
+                        const polygon_{{ $area->id }} = new google.maps.Polygon({
+                            paths: polygonPath_{{ $area->id }},
                             strokeColor: "#FF0000",
                             strokeOpacity: 0.8,
                             strokeWeight: 2,
@@ -198,14 +198,18 @@
                             map: map
                         });
                         
-                        polygons.push(polygon);
+                        polygons.push(polygon_{{ $area->id }});
                         
                         // Add click event to polygon
-                        polygon.addListener("click", () => {
-                            infoWindow.open(map, marker);
+                        polygon_{{ $area->id }}.addListener("click", () => {
+                            // Close all open info windows
+                            infoWindows.forEach(iw => iw.close());
+                            
+                            // Open this info window
+                            infoWindow_{{ $area->id }}.open(map, marker_{{ $area->id }});
                         });
                     } catch (e) {
-                        console.error("Error parsing polygon data:", e);
+                        console.error("Error parsing polygon data for area {{ $area->id }}:", e);
                     }
                 @endif
             @endif
