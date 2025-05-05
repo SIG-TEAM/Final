@@ -19,7 +19,7 @@ class KategoriController extends Controller
      */
     public function create()
     {
-        return view('admin.kategoricreate');
+        return view('admin.KategoriCreate');
     }
 
     /**
@@ -59,7 +59,7 @@ class KategoriController extends Controller
         $kategori = Kategori::findOrFail($id);
         
         // Return the edit view with the kategori
-        return view('admin.kategoriedit', compact('kategori'));
+        return view('admin.KategoriEdit', compact('kategori'));
     }
 
     /**

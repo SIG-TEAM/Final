@@ -4,9 +4,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PotensiDesaController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\KategoriController;
-use App\Http\Controllers\PotensiAreaController;
-use App\Http\Controllers\RekomendasiDesaController;
 use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -45,8 +44,11 @@ Route::delete('/potensi-desa/{id}', [PotensiDesaController::class, 'destroy'])->
 Route::get('/peta-potensi-desa', [PotensiDesaController::class, 'map'])->name('potensi-desa.map');
 Route::get('/api/potensi-desa', [PotensiDesaController::class, 'getPotensiData'])->name('api.potensi-desa');
 
-// Admin routes group with auth middleware
-Route::middleware(['auth'])->prefix('admin')->group(function () {
+Route::get('/category/{category}', [PotensiDesaController::class, 'byCategory'])
+    ->name('category.show');
+
+// Admin routes group with auth and role middleware
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', function() {
         return view('admin.index');
     })->name('admin.dashboard');
@@ -59,6 +61,10 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::put('/kategori/{id}', [KategoriController::class, 'update'])->name('kategori.update');
     Route::delete('/kategori/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
 });
+
+Route::resource('potensi-area', PotensiAreaController::class);
+Route::get('/potensi-area/create', [PotensiAreaController::class, 'create'])->name('potensi-area.create');
+Route::post('/potensi-area', [PotensiAreaController::class, 'store'])->name('potensi-area.store');
 
 Route::resource('potensi-area', PotensiAreaController::class);
 Route::get('/potensi-area/create', [PotensiAreaController::class, 'create'])->name('potensi-area.create');
