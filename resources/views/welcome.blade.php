@@ -5,6 +5,7 @@
 @endsection
 
 @section('head')
+
 <!-- Google Maps API -->
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZDmvgsLscfcgz3faTixl54JobWg0xGAY"></script>
 <script>
@@ -35,6 +36,7 @@
             }
         });
 
+        // Tambahkan marker untuk setiap potensi area
         const cileunyiMarkers = [
             {
                 position: { lat: -6.9383, lng: 107.7190 },
@@ -50,122 +52,6 @@
                                 {
                                     title: "Padi Sawah",
                                     description: "Luas area 450 hektar dengan produksi rata-rata 5.8 ton/hektar per panen. Panen dilakukan 2-3 kali setahun."
-                                },
-                                {
-                                    title: "Sayuran",
-                                    description: "Budidaya sayuran organik seluas 75 hektar yang mencakup kangkung, bayam, dan sawi."
-                                }
-                            ]
-                        },
-                        {
-                            name: "Infrastruktur",
-                            icon: "🏗️",
-                            items: [
-                                {
-                                    title: "Irigasi",
-                                    description: "Sistem irigasi teknis yang mengairi 85% lahan pertanian dengan sumber dari sungai Cidurian."
-                                }
-                            ]
-                        }
-                    ]
-                }
-            },
-            {
-                position: { lat: -6.9303, lng: 107.7290 },
-                title: "Peternakan Sapi Cileunyi",
-                category: "Peternakan",
-                details: {
-                    title: "Peternakan Sapi Cileunyi",
-                    categories: [
-                        {
-                            name: "Peternakan",
-                            icon: "🐄",
-                            items: [
-                                {
-                                    title: "Sapi Perah",
-                                    description: "250 ekor sapi perah dengan produksi susu 12-15 liter per ekor per hari, dikelola oleh koperasi susu desa."
-                                },
-                                {
-                                    title: "Domba",
-                                    description: "Peternakan domba rakyat dengan total 800 ekor yang tersebar di seluruh desa."
-                                }
-                            ]
-                        },
-                        {
-                            name: "Ekonomi",
-                            icon: "💰",
-                            items: [
-                                {
-                                    title: "Koperasi Susu",
-                                    description: "Koperasi dengan 75 anggota aktif, mengelola distribusi susu ke pengepul di Bandung."
-                                }
-                            ]
-                        }
-                    ]
-                }
-            },
-            {
-                position: { lat: -6.9423, lng: 107.7100 },
-                title: "Industri Rumahan Cileunyi",
-                category: "Ekonomi",
-                details: {
-                    title: "Industri Rumahan Cileunyi",
-                    categories: [
-                        {
-                            name: "Ekonomi",
-                            icon: "💰",
-                            items: [
-                                {
-                                    title: "Kerajinan Bambu",
-                                    description: "40 pengrajin bambu yang membuat berbagai produk seperti anyaman, furniture, dan souvenir."
-                                },
-                                {
-                                    title: "Produksi Makanan",
-                                    description: "25 UMKM makanan olahan dengan produk unggulan keripik singkong dan dodol."
-                                }
-                            ]
-                        },
-                        {
-                            name: "SDA",
-                            icon: "🌳",
-                            items: [
-                                {
-                                    title: "Bambu",
-                                    description: "Hutan bambu seluas 40 hektar yang dikelola secara berkelanjutan untuk bahan baku kerajinan."
-                                }
-                            ]
-                        }
-                    ]
-                }
-            },
-            {
-                position: { lat: -6.9353, lng: 107.7240 },
-                title: "Sumber Mata Air Cileunyi",
-                category: "SDA",
-                details: {
-                    title: "Sumber Mata Air Cileunyi",
-                    categories: [
-                        {
-                            name: "SDA",
-                            icon: "🌳",
-                            items: [
-                                {
-                                    title: "Mata Air Cibiru",
-                                    description: "Sumber mata air dengan debit 25 liter/detik yang menjadi sumber air bersih bagi 60% penduduk desa."
-                                },
-                                {
-                                    title: "Hutan Lindung",
-                                    description: "Area hutan lindung seluas 100 hektar yang berfungsi sebagai daerah resapan air."
-                                }
-                            ]
-                        },
-                        {
-                            name: "Infrastruktur",
-                            icon: "🏗️",
-                            items: [
-                                {
-                                    title: "Sistem Distribusi Air",
-                                    description: "Jaringan pipa air bersih sepanjang 7 km yang menjangkau 5 dusun di desa Cileunyi."
                                 }
                             ]
                         }
@@ -190,12 +76,51 @@
             });
         });
 
-        map.addListener("click", (event) => {
-            new google.maps.Marker({
-                position: event.latLng,
-                map: map,
-                title: "Lokasi yang diklik"
-            });
+        // Tambahkan polygon untuk setiap potensi area
+        @if(isset($potensiAreas) && $potensiAreas->count() > 0)
+            @foreach ($potensiAreas as $area)
+                const polygon{{ $area->id }}Coords = {!! $area->polygon !!};
+                const polygon{{ $area->id }} = new google.maps.Polygon({
+                    paths: polygon{{ $area->id }}Coords.map(coord => ({ lng: coord[0], lat: coord[1] })),
+                    strokeColor: '#FF0000',
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: '#FF0000',
+                    fillOpacity: 0.35,
+                    map: map
+                });
+
+                polygon{{ $area->id }}.addListener("click", function(event) {
+                    openSidebar({
+                        title: "{{ $area->nama }}",
+                        categories: [{
+                            name: "{{ $area->kategori }}",
+                            icon: "📍",
+                            items: [{
+                                title: "{{ $area->nama }}",
+                                description: `{!! nl2br(e($area->deskripsi)) !!}`
+                            }]
+                        }]
+                    });
+                });
+            @endforeach
+        @endif
+
+        // Example polygon
+        const examplePolygonCoords = [
+            [107.7190, -6.9383],
+            [107.7290, -6.9303],
+            [107.7100, -6.9423],
+            [107.7240, -6.9353]
+        ];
+        const examplePolygon = new google.maps.Polygon({
+            paths: examplePolygonCoords.map(coord => ({ lng: coord[0], lat: coord[1] })),
+            strokeColor: '#0000FF',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#0000FF',
+            fillOpacity: 0.35,
+            map: map
         });
     }
 

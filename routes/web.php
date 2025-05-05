@@ -4,7 +4,9 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PotensiDesaController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\KategoriController;
+use App\Http\Controllers\PotensiAreaController;
 use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -60,5 +62,9 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::put('/kategori/{id}', [KategoriController::class, 'update'])->name('kategori.update');
     Route::delete('/kategori/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
 });
+
+Route::resource('potensi-area', PotensiAreaController::class);
+Route::get('/potensi-area/create', [PotensiAreaController::class, 'create'])->name('potensi-area.create');
+Route::post('/potensi-area', [PotensiAreaController::class, 'store'])->name('potensi-area.store');
 
 require __DIR__.'/auth.php';
