@@ -7,6 +7,11 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
+        <!-- icons -->
+        <link rel="icon" type="image/png" href="{{ asset('images/NUSA.png') }}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/NUSA.png') }}">
+        <link rel="shortcut icon" type="image/png" href="{{ asset('images/NUSA.png') }}">
+        
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
