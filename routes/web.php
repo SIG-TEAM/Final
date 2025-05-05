@@ -48,8 +48,8 @@ Route::get('/api/potensi-desa', [PotensiDesaController::class, 'getPotensiData']
 Route::get('/category/{category}', [PotensiDesaController::class, 'byCategory'])
     ->name('category.show');
 
-// Admin routes group with auth middleware
-Route::middleware(['auth'])->prefix('admin')->group(function () {
+// Admin routes group with auth and role middleware
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', function() {
         return view('admin.index');
     })->name('admin.dashboard');
