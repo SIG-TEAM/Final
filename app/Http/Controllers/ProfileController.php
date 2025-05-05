@@ -57,4 +57,33 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+
+    public function requestRoleChange(Request $request): RedirectResponse
+    {
+        $user = $request->user();
+
+        if ($user->role === 'pengguna') {
+            $user->status_permintaan = 'pending'; // Tandai permintaan sebagai pending
+            $user->save();
+
+            return Redirect::route('profile.edit')->with('status', 'request-sent');
+        }
+
+        return Redirect::route('profile.edit')->with('error', 'Invalid role for request.');
+    }
+    
+    public function approveRoleChange($userId): RedirectResponse
+    {
+        $user = \App\Models\User::findOrFail($userId);
+
+        if ($user->status_permintaan === 'pending') {
+            $user->role = 'warga'; // Ubah role menjadi warga
+            $user->status_permintaan = null; // Hapus status permintaan
+            $user->save();
+
+            return Redirect::back()->with('status', 'request-approved');
+        }
+
+        return Redirect::back()->with('error', 'No pending request found.');
+    }
 }
