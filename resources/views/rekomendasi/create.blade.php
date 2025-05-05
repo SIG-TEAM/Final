@@ -15,17 +15,11 @@
             <div class="mb-3">
                 <label for="nama_titik" class="form-label required-label">Nama Desa/Area</label>
                 <input type="text" class="form-control" id="nama_titik" name="nama_titik" required>
-                <div class="invalid-feedback">
-                    Silakan masukkan nama area.
-                </div>
             </div>
 
             <div class="mb-3">
                 <label for="jenis_potensi" class="form-label required-label">Nama Kategori</label>
                 <input type="text" class="form-control" id="jenis_potensi" name="jenis_potensi" required>
-                <div class="invalid-feedback">
-                    Silakan masukkan nama area.
-                </div>
             </div>
 
             <div class="mb-3">

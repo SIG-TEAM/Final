@@ -4,11 +4,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PotensiDesaController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\KategoriController;
-<<<<<<< Updated upstream
-=======
 use App\Http\Controllers\PotensiAreaController;
 use App\Http\Controllers\RekomendasiDesaController;
->>>>>>> Stashed changes
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -63,8 +60,6 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::delete('/kategori/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
 });
 
-<<<<<<< Updated upstream
-=======
 Route::resource('potensi-area', PotensiAreaController::class);
 Route::get('/potensi-area/create', [PotensiAreaController::class, 'create'])->name('potensi-area.create');
 Route::post('/potensi-area', [PotensiAreaController::class, 'store'])->name('potensi-area.store');
@@ -76,6 +71,4 @@ Route::get('/rekomendasi/{id}', [RekomendasiDesaController::class, 'show'])->nam
 Route::get('/rekomendasi/{id}/edit', [RekomendasiDesaController::class, 'edit'])->name('rekomendasi.edit');
 Route::put('/rekomendasi/{id}', [RekomendasiDesaController::class, 'update'])->name('rekomendasi.update');
 Route::delete('/rekomendasi/{id}', [RekomendasiDesaController::class, 'destroy'])->name('rekomendasi.destroy');
-
->>>>>>> Stashed changes
 require __DIR__.'/auth.php';
