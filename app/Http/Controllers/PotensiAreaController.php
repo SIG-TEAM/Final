@@ -8,42 +8,31 @@ use Illuminate\Support\Facades\Storage;
 
 class PotensiAreaController extends Controller
 {
-    // Tampilkan halaman welcome dengan data potensi area
-    public function welcome()
-    {
-        // Ambil semua data potensi area dari database
-        $potensiAreas = PotensiArea::all();
-
-        // Kirim data ke view welcome
-        return view('welcome', compact('potensiAreas'));
-    }
-
-    // Tampilkan semua data potensi
     public function index()
     {
         // Ambil semua data potensi area dari database
         $potensiAreas = PotensiArea::all();
 
-        // Kirim data ke view index
+        // Kirim data ke view
         return view('potensi-area.index', compact('potensiAreas'));
     }
 
-    // Tampilkan form create
     public function create()
     {
-        return view('potensi-area.create');
+        return view('potensi-area.create'); // Pastikan file Blade ini ada
     }
 
-    // Simpan data potensi baru
     public function store(Request $request)
     {
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
-            'kategori' => 'required|string|max:100',
+            'kategori' => 'required|string',
             'deskripsi' => 'nullable|string',
-            'polygon' => 'nullable|json',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'polygon' => 'nullable|json', // Validasi untuk polygon
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validasi untuk file foto
             'titik_potensi' => 'nullable|json',
-            'foto' => 'nullable|image|max:2048',
         ]);
 
         // Validasi tambahan: pastikan polygon atau titik_potensi tidak keduanya kosong
@@ -52,12 +41,13 @@ class PotensiAreaController extends Controller
         }
 
         if ($request->hasFile('foto')) {
-            $validated['foto'] = $request->file('foto')->store('foto-potensi', 'public');
+            $fotoPath = $request->file('foto')->store('potensi-area-foto', 'public');
+            $validated['foto'] = $fotoPath;
         }
 
         PotensiArea::create($validated);
 
-        return redirect()->route('potensi-area.index')->with('success', 'Data potensi berhasil ditambahkan!');
+        return redirect()->route('potensi-area.index')->with('success', 'Potensi area berhasil ditambahkan.');
     }
 
     // Tampilkan detail satu data potensi

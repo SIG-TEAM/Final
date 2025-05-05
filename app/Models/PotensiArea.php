@@ -13,8 +13,10 @@ class PotensiArea extends Model
         'nama',
         'kategori',
         'deskripsi',
-        'foto',
-        'polygon',
+        'latitude', // Tambahkan kolom latitude
+        'longitude', // Tambahkan kolom longitude
+        'polygon', // Pastikan kolom ini ada di database
+        'foto',    // Tambahkan kolom foto
         'titik_potensi',
     ];
 

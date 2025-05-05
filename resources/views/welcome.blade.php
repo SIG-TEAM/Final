@@ -5,12 +5,15 @@
 @endsection
 
 @section('head')
-
 <!-- Google Maps API -->
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZDmvgsLscfcgz3faTixl54JobWg0xGAY"></script>
 <script>
+    let map;
+    let currentMarker;
+    let selectedLocation;
+
     function initMap() {
-        const map = new google.maps.Map(document.getElementById('map'), {
+        map = new google.maps.Map(document.getElementById('map'), {
             center: { lat: -6.9383, lng: 107.7190 },
             zoom: 13,
             styles: [
@@ -36,150 +39,111 @@
             }
         });
 
-        // Tambahkan marker untuk setiap potensi area
-        const cileunyiMarkers = [
-            {
-                position: { lat: -6.9383, lng: 107.7190 },
-                title: "Pertanian Padi Cileunyi",
-                category: "Pertanian",
-                details: {
-                    title: "Pertanian Padi Cileunyi",
-                    categories: [
-                        {
-                            name: "Pertanian",
-                            icon: "🌾",
-                            items: [
-                                {
-                                    title: "Padi Sawah",
-                                    description: "Luas area 450 hektar dengan produksi rata-rata 5.8 ton/hektar per panen. Panen dilakukan 2-3 kali setahun."
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
-        ];
-
-        cileunyiMarkers.forEach(markerInfo => {
-            const marker = new google.maps.Marker({
-                position: markerInfo.position,
-                map: map,
-                title: markerInfo.title,
-                icon: {
-                    url: getCategoryIcon(markerInfo.category),
-                    scaledSize: new google.maps.Size(32, 32)
-                }
-            });
-
-            marker.addListener("click", () => {
-                openSidebar(markerInfo.details);
-            });
-        });
-
-        // Tambahkan polygon untuk setiap potensi area
-        @if(isset($potensiAreas) && $potensiAreas->count() > 0)
-            @foreach ($potensiAreas as $area)
-                const polygon{{ $area->id }}Coords = {!! $area->polygon !!};
-                const polygon{{ $area->id }} = new google.maps.Polygon({
-                    paths: polygon{{ $area->id }}Coords.map(coord => ({ lng: coord[0], lat: coord[1] })),
-                    strokeColor: '#FF0000',
-                    strokeOpacity: 0.8,
-                    strokeWeight: 2,
-                    fillColor: '#FF0000',
-                    fillOpacity: 0.35,
-                    map: map
-                });
-
-                polygon{{ $area->id }}.addListener("click", function(event) {
-                    openSidebar({
-                        title: "{{ $area->nama }}",
-                        categories: [{
-                            name: "{{ $area->kategori }}",
-                            icon: "📍",
-                            items: [{
-                                title: "{{ $area->nama }}",
-                                description: `{!! nl2br(e($area->deskripsi)) !!}`
-                            }]
-                        }]
-                    });
-                });
-            @endforeach
-        @endif
-
-        // Example polygon
-        const examplePolygonCoords = [
-            [107.7190, -6.9383],
-            [107.7290, -6.9303],
-            [107.7100, -6.9423],
-            [107.7240, -6.9353]
-        ];
-        const examplePolygon = new google.maps.Polygon({
-            paths: examplePolygonCoords.map(coord => ({ lng: coord[0], lat: coord[1] })),
-            strokeColor: '#0000FF',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: '#0000FF',
-            fillOpacity: 0.35,
-            map: map
+        map.addListener("click", function (event) {
+            addMarker(event.latLng);
         });
     }
 
-    function getCategoryIcon(category) {
-        switch(category) {
-            case "Pertanian":
-                return "https://maps.google.com/mapfiles/ms/icons/green-dot.png";
-            case "Peternakan":
-                return "https://maps.google.com/mapfiles/ms/icons/blue-dot.png";
-            case "Ekonomi":
-                return "https://maps.google.com/mapfiles/ms/icons/yellow-dot.png";
-            case "SDA":
-                return "https://maps.google.com/mapfiles/ms/icons/purple-dot.png";
-            case "Infrastruktur": 
-                return "https://maps.google.com/mapfiles/ms/icons/orange-dot.png";
-            default:
-                return "https://maps.google.com/mapfiles/ms/icons/red-dot.png";
+    function addMarker(location) {
+        if (currentMarker) {
+            currentMarker.setMap(null);
         }
+
+        currentMarker = new google.maps.Marker({
+            position: location,
+            map: map,
+            draggable: true,
+            animation: google.maps.Animation.DROP
+        });
+
+        google.maps.event.addListener(currentMarker, 'dragend', function() {
+            selectedLocation = currentMarker.getPosition();
+            updateSidebarLocation(selectedLocation);
+        });
+
+        selectedLocation = location;
+        openSidebar(location);
     }
 
-    function openSidebar(details) {
+    function updateSidebarLocation(location) {
+        document.getElementById('latitude').value = location.lat();
+        document.getElementById('longitude').value = location.lng();
+    }
+
+    function openSidebar(location) {
         const sidebar = document.getElementById("sidebar");
-        sidebar.classList.add("open");
-        
         const sidebarContent = document.getElementById("sidebar-content");
-        
-        let contentHTML = `
-            <div class="sidebar-header">
-                <div class="sidebar-title">${details.title}</div>
-                <button class="close-sidebar" onclick="closeSidebar()">×</button>
+
+        sidebar.classList.add("w-96");
+        sidebar.classList.remove("w-0");
+
+        sidebarContent.innerHTML = `
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold text-green-700">Tambah Potensi Area</h2>
+                    <button onclick="closeSidebar()" class="text-gray-500 hover:text-gray-700 focus:outline-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="bg-green-50 p-4 rounded-lg mb-6 border border-green-200">
+                    <p class="text-sm text-green-800">
+                        <span class="font-medium">Lokasi dipilih!</span> Tentukan detail potensi area pada titik ini.
+                    </p>
+                </div>
+
+                <form id="locationForm" method="POST" action="/potensi-area" class="space-y-4">
+                    @csrf
+                    <div class="mb-4">
+                        <label for="latitude" class="block text-sm font-medium text-gray-700">Latitude</label>
+                        <input type="text" id="latitude" name="latitude" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm" value="${location.lat()}" readonly>
+                    </div>
+                    <div class="mb-4">
+                        <label for="longitude" class="block text-sm font-medium text-gray-700">Longitude</label>
+                        <input type="text" id="longitude" name="longitude" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm" value="${location.lng()}" readonly>
+                    </div>
+                    
+                    <div class="pt-4 flex flex-col gap-3">
+                        <!-- Tambah Potensi Area -->
+                        <a href="/potensi-area/create" class="w-full inline-flex justify-center items-center px-4 py-2 border border-black text-sm font-medium rounded-md shadow-sm text-black bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                            Tambah Potensi Area
+                        </a>
+
+                        <!-- Lihat Semua Potensi Area -->
+                        <a href="/potensi-area" class="w-full inline-flex justify-center items-center px-4 py-2 border border-green-600 text-sm font-medium rounded-md text-green-700 bg-white hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                            Lihat Semua Potensi Area
+                        </a>
+
+                        <!-- Tombol Batal -->
+                        <button type="button" onclick="closeSidebar()" class="w-full inline-flex justify-center items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-150">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            Batal
+                        </button>
+                    </div>
+                </form>
             </div>
         `;
-        
-        details.categories.forEach(category => {
-            contentHTML += `
-                <div class="potential-category">
-                    <div class="category-title">
-                        <span>${category.icon}</span> ${category.name}
-                    </div>
-            `;
-            
-            category.items.forEach(item => {
-                contentHTML += `
-                    <div class="potential-item">
-                        <div class="potential-item-title">${item.title}</div>
-                        <div class="potential-item-desc">${item.description}</div>
-                    </div>
-                `;
-            });
-            
-            contentHTML += `</div>`;
-        });
-        
-        sidebarContent.innerHTML = contentHTML;
     }
-    
+
     function closeSidebar() {
         const sidebar = document.getElementById("sidebar");
-        sidebar.classList.remove("open");
+        sidebar.classList.add("w-0");
+        sidebar.classList.remove("w-96");
+        
+        if (currentMarker) {
+            currentMarker.setMap(null);
+            currentMarker = null;
+        }
     }
 </script>
 @endsection
@@ -189,11 +153,31 @@ onload="initMap()"
 @endsection
 
 @section('content')
-<div class="flex h-screen">
-    <div id="map" class="flex-grow"></div>
-    <div id="sidebar" class="w-0 bg-white h-full overflow-y-auto transition-width duration-300 shadow-lg">
-        <div id="sidebar-content" class="p-5">
-            <!-- Content will be added dynamically via JavaScript -->
+<div class="relative">
+    <!-- Tombol Tambah Potensi Area -->
+    <div class="absolute top-4 right-4 z-10">
+        <a href="/potensi-area/create" class="inline-flex items-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Tambah Potensi Area
+        </a>
+    </div>
+
+    <div class="flex h-screen">
+        <div id="map" class="flex-grow"></div>
+        <div id="sidebar" class="w-0 bg-white h-full overflow-hidden transition-all duration-300 shadow-xl border-l border-gray-200">
+            <div id="sidebar-content" class="p-5">
+                <!-- Content will be added dynamically via JavaScript -->
+                <div class="mt-4">
+                    <a href="/potensi-area/create" class="w-full inline-flex justify-center items-center px-4 py-3 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-150">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                        Tambah Potensi Area
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
