@@ -14,8 +14,6 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         
-        <!-- Alpine.js (for dropdown functionality) -->
-        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.12.3/dist/cdn.min.js"></script>
         
         <!-- Additional styles for each page -->
         @yield('styles')
@@ -23,7 +21,7 @@
         <!-- Additional head content -->
         @yield('head')
     </head>
-    <body class="font-sans antialiased bg-gray-100 m-0 p-0" @yield('body_attributes')>
+    <body class="p-0 m-0 font-sans antialiased bg-gray-100" @yield('body_attributes')>
         <div class="min-h-screen">
             <!-- Include navbar component -->
             <x-navbar />
@@ -31,7 +29,7 @@
             <!-- Page Heading -->
             @if (isset($header))
                 <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                    <div class="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>
                 </header>

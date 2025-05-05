@@ -14,15 +14,24 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
-            <div>
+    <body class="font-sans antialiased text-gray-900">
+        <div class="relative flex flex-col items-center min-h-screen pt-6 bg-gray-900 sm:justify-center sm:pt-0">
+            <!-- Background image with overlay -->
+            <div class="absolute inset-0 z-0">
+                <img src="{{ asset('images/ui/bgdesa.jpg') }}" 
+                     class="object-cover w-full h-full"
+                     alt="Background">
+                <div class="absolute inset-0 bg-gray-900/70"></div>
+            </div>
+
+            <!-- Content -->
+            <div class="relative z-10">
                 <a href="/">
-                    <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
+                    <x-application-logo class="w-20 h-20 text-gray-500 fill-current" />
                 </a>
             </div>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
+            <div class="relative z-10 w-full px-6 py-4 mt-6 overflow-hidden bg-white shadow-md sm:max-w-md sm:rounded-lg">
                 {{ $slot }}
             </div>
         </div>

@@ -1,4 +1,4 @@
-<nav class="bg-white shadow-sm py-2 px-4 border-b border-gray-200">
+<nav class="px-4 py-2 bg-white border-b border-gray-200 shadow-sm">
     <div class="flex justify-between items-center h-[60px]">
         <!-- Left side - Logo and Title -->
         <div class="flex items-center">
@@ -6,14 +6,14 @@
                 <a href="/" class="flex items-center">
                     <x-application-logo class="h-[50px] w-auto mr-3" />
                 </a>
-                <a href="/" class="font-semibold text-green-800 text-xl whitespace-nowrap">Potensi Desa</a>
+                <a href="/" class="text-xl font-semibold text-green-800 whitespace-nowrap">Potensi Desa</a>
             </div>
         </div>
         
         <!-- Center - Search -->
-        <div class="absolute left-1/2 transform -translate-x-1/2">
+        <div class="absolute transform -translate-x-1/2 left-1/2">
             <div class="relative flex items-center">
-                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 text-sm">🔍</span>
+                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-sm text-gray-400">🔍</span>
                 <input type="text" placeholder="Search" 
                        class="bg-gray-100 pl-10 pr-4 py-1 rounded-full border-0 text-sm w-[180px] focus:ring-0 focus:outline-none">
             </div>
@@ -24,41 +24,44 @@
             @auth
                 <div class="relative" x-data="{ open: false }">
                     <button @click="open = !open" @click.away="open = false" 
-                            class="flex items-center gap-2 bg-white text-green-800 px-4 py-2 border border-green-700 rounded font-semibold text-sm">
+                            class="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-green-800 bg-white border border-green-700 rounded">
                         <span>{{ Auth::user()->name }}</span>
                         <span>▼</span>
                     </button>
                     <div x-show="open" 
                          class="absolute right-0 top-[110%] w-[180px] bg-white rounded-md shadow-lg py-2 z-50"
                          style="display: none;">
-                        <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 text-sm">Profile</a>
+                        <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
                         @if(auth()->user()->role === 'admin')
-                            <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 text-sm">Admin Dashboard</a>
+                            <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Admin Dashboard</a>
                         @endif
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" class="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 text-sm">
+                            <button type="submit" class="w-full px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100">
                                 Log Out
                             </button>
                         </form>
                     </div>
                 </div>
             @else
-                <a href="{{ route('register') }}" class="bg-white text-green-800 px-4 py-2 border border-green-700 rounded font-semibold text-sm hover:bg-gray-50">Register</a>
-                <a href="{{ route('login') }}" class="bg-green-800 text-white px-4 py-2 rounded font-semibold text-sm">Login</a>
+                <a href="{{ route('register') }}" class="px-4 py-2 text-sm font-semibold text-green-800 bg-white border border-green-700 rounded hover:bg-gray-50">Register</a>
+                <a href="{{ route('login') }}" class="px-4 py-2 text-sm font-semibold text-white bg-green-800 rounded">Login</a>
             @endauth
         </div>
     </div>
     
     <!-- Category Navigation Row -->
-    <div class="flex justify-center items-center py-2 px-4">
+    <div class="flex items-center justify-center px-4 py-2">
         <div class="flex items-center gap-4">
-            <x-nav-link :active="request()->is('/')" href="#">All</x-nav-link>
-            <x-nav-link :active="request()->is('category/pertanian')" href="#">Pertanian</x-nav-link>
-            <x-nav-link :active="request()->is('category/peternakan')" href="#">Peternakan</x-nav-link>
-            <x-nav-link :active="request()->is('category/ekonomi')" href="#">Ekonomi</x-nav-link>
-            <x-nav-link :active="request()->is('category/sda')" href="#">SDA</x-nav-link>
-            <x-nav-link :active="request()->is('category/infrastruktur')" href="#">Infrastruktur</x-nav-link>
+            <x-nav-link :active="request()->is('/')" href="/">All</x-nav-link>
+            @foreach($categories as $category)
+                <x-nav-link 
+                    :active="request()->is('category/' . strtolower($category->nama))" 
+                    href="{{ route('category.show', strtolower($category->nama)) }}"
+                >
+                    {{ $category->nama }}
+                </x-nav-link>
+            @endforeach
         </div>
     </div>
 </nav>
