@@ -68,6 +68,6 @@ Route::get('/potensi-area/create', [PotensiAreaController::class, 'create'])->na
 Route::post('/potensi-area', [PotensiAreaController::class, 'store'])->name('potensi-area.store');
 
 Route::post('/profile/request-role-change', [ProfileController::class, 'requestRoleChange'])->name('profile.requestRoleChange');
-Route::post('/admin/approve-role-change/{userId}', [ProfileController::class, 'approveRoleChange'])->name('admin.approveRoleChange');
+Route::post('/admin/approve-role-change/{userId}', [ProfileController::class, 'approveRoleChange'])->name('profile.approveRoleChange');
 
 require __DIR__.'/auth.php';

@@ -16,8 +16,12 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+
+        $requests = \App\Models\User::where('status_permintaan', 'pending')->get();
+
         return view('profile.edit', [
             'user' => $request->user(),
+            'requests' => $requests,
         ]);
     }
 
@@ -62,28 +66,28 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
-        if ($user->role === 'pengguna') {
-            $user->status_permintaan = 'pending'; // Tandai permintaan sebagai pending
-            $user->save();
-
-            return Redirect::route('profile.edit')->with('status', 'request-sent');
+        if ($user->role !== 'pengguna') {
+            return Redirect::route('profile.edit')->with('error', 'Invalid role for request.');
         }
 
-        return Redirect::route('profile.edit')->with('error', 'Invalid role for request.');
+        $user->status_permintaan = 'pending'; // Tandai permintaan sebagai pending
+        $user->save();
+
+        return Redirect::route('profile.edit')->with('status', 'request-sent');
     }
     
     public function approveRoleChange($userId): RedirectResponse
     {
         $user = \App\Models\User::findOrFail($userId);
 
-        if ($user->status_permintaan === 'pending') {
-            $user->role = 'warga'; // Ubah role menjadi warga
-            $user->status_permintaan = null; // Hapus status permintaan
-            $user->save();
-
-            return Redirect::back()->with('status', 'request-approved');
+        if ($user->status_permintaan !== 'pending') {
+            return Redirect::back()->with('error', 'No pending request found.');
         }
 
-        return Redirect::back()->with('error', 'No pending request found.');
+        $user->role = 'penduduk';
+        $user->status_permintaan = null;
+        $user->save();
+
+        return Redirect::back()->with('status', 'request-approved');
     }
 }
