@@ -91,12 +91,13 @@
                             </div>
                             
                             <div class="mb-4">
-                                <label for="map" class="form-label required-label">Gambar Polygon di Peta</label>
+                                <label for="map" class="form-label required-label">Gambar Titik atau Polygon di Peta</label>
                                 <div id="map" class="mb-2"></div>
                                 <div class="form-text mb-3">Gambar polygon area dengan mengklik tombol polygon di peta kemudian klik titik-titik di peta untuk membentuk area.</div>
-                                <textarea name="polygon" id="polygon-coords" hidden required></textarea>
+                                <textarea name="polygon" id="polygon-coords" hidden></textarea>
+                                <textarea name="titik_potensi" id="marker-coords" hidden></textarea>
                                 <div id="polygon-status" class="alert alert-warning d-none">
-                                    Polygon belum dibuat. Silakan gambar area pada peta.
+                                    Titik atau Polygon belum dibuat. Silakan gambar area pada peta.
                                 </div>
                             </div>
 
@@ -170,10 +171,10 @@
                         color: '#3388ff'
                     }
                 },
+                marker: true,
                 polyline: false,
                 rectangle: false,
                 circle: false,
-                marker: false,
                 circlemarker: false
             },
             edit: {
@@ -189,19 +190,25 @@
         document.getElementById('polygon-status').classList.remove('d-none');
         
         map.on('draw:created', function (e) {
-            // Clear existing layers
-            drawnItems.clearLayers();
+            var type = e.layerType;
             var layer = e.layer;
+
+            if (type === 'marker') {
+                var markerCoords = [layer.getLatLng().lng, layer.getLatLng().lat];
+                document.getElementById('marker-coords').value = JSON.stringify(markerCoords);
+                console.log('Titik Potensi:', markerCoords); // Debug titik potensi
+            } else if (type === 'polygon') {
+                var coordinates = layer.getLatLngs()[0].map(p => [p.lng, p.lat]);
+                document.getElementById('polygon-coords').value = JSON.stringify(coordinates);
+                console.log('Polygon:', coordinates); // Debug polygon
+            }
+
             drawnItems.addLayer(layer);
-            
-            // Get polygon coordinates and store them
-            var coordinates = layer.getLatLngs()[0].map(p => [p.lng, p.lat]);
-            document.getElementById('polygon-coords').value = JSON.stringify(coordinates);
             
             // Update status
             document.getElementById('polygon-status').classList.remove('alert-warning');
             document.getElementById('polygon-status').classList.add('alert-success');
-            document.getElementById('polygon-status').innerHTML = 'Polygon berhasil dibuat. Area telah ditandai pada peta.';
+            document.getElementById('polygon-status').innerHTML = 'Titik atau Polygon berhasil dibuat. Area telah ditandai pada peta.';
             document.getElementById('polygon-status').classList.remove('d-none');
 
             // Set latitude and longitude to the center of the polygon
@@ -219,7 +226,7 @@
             // Reset status
             document.getElementById('polygon-status').classList.remove('alert-success');
             document.getElementById('polygon-status').classList.add('alert-warning');
-            document.getElementById('polygon-status').innerHTML = 'Polygon belum dibuat. Silakan gambar area pada peta.';
+            document.getElementById('polygon-status').innerHTML = 'Titik atau Polygon belum dibuat. Silakan gambar area pada peta.';
             document.getElementById('polygon-status').classList.remove('d-none');
         });
 
@@ -239,6 +246,18 @@
         // Resize map when window is resized
         window.addEventListener('resize', function() {
             map.invalidateSize();
+        });
+
+        // Validate polygon and marker before form submission
+        document.querySelector('form').addEventListener('submit', function(event) {
+            const polygonCoords = document.getElementById('polygon-coords').value;
+            const markerCoords = document.getElementById('marker-coords').value;
+
+            if (!polygonCoords && !markerCoords) {
+                event.preventDefault();
+                alert('Silakan tambahkan Polygon atau Titik Potensi di peta sebelum menyimpan.');
+                return;
+            }
         });
     </script>
 </body>

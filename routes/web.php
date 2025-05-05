@@ -43,18 +43,7 @@ Route::get('/peta-potensi-desa', [PotensiDesaController::class, 'map'])->name('p
 Route::get('/api/potensi-desa', [PotensiDesaController::class, 'getPotensiData'])->name('api.potensi-desa');
 
 Route::resource('potensi-area', PotensiAreaController::class);
-
-// Add this route for the map view
-Route::get('/peta-potensi-area', [App\Http\Controllers\PotensiAreaController::class, 'map'])
-    ->name('potensi-area.map');
-
-// Route untuk peta dan API potensi area
-Route::get('/api/potensi-area', [PotensiAreaController::class, 'getPotensiData'])->name('api.potensi-area');
-
-// Route untuk menampilkan halaman form PotensiArea
-Route::get('/potensi-area/create', [App\Http\Controllers\PotensiAreaController::class, 'create'])->name('potensi-area.create');
-
-// Route untuk menyimpan data PotensiArea
-Route::post('/potensi-area', [App\Http\Controllers\PotensiAreaController::class, 'store'])->name('potensi-area.store');
+Route::get('/potensi-area/create', [PotensiAreaController::class, 'create'])->name('potensi-area.create');
+Route::post('/potensi-area', [PotensiAreaController::class, 'store'])->name('potensi-area.store');
 
 require __DIR__.'/auth.php';
