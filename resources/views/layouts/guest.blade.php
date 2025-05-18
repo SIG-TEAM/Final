@@ -6,11 +6,6 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ config('app.name', 'Laravel') }}</title>
-
-        <!-- icons -->
-        <link rel="icon" type="image/png" href="{{ asset('images/NUSA.png') }}">
-        <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/NUSA.png') }}">
-        <link rel="shortcut icon" type="image/png" href="{{ asset('images/NUSA.png') }}">
         
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -30,12 +25,6 @@
             </div>
 
             <!-- Content -->
-            <div class="relative z-10">
-                <a href="/">
-                    <x-application-logo class="w-20 h-20 text-gray-500 fill-current" />
-                </a>
-            </div>
-
             <div class="relative z-10 w-full px-6 py-4 mt-6">
                 {{ $slot }}
             </div>
