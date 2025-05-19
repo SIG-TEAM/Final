@@ -26,4 +26,5 @@
     </div>
     <div class="h-full min-h-screen p-12 m-10 bg-white shadow sm:rounded-lg">
     </div>
+    
 @endsection 
