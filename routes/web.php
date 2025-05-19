@@ -5,6 +5,7 @@ use App\Http\Controllers\PotensiDesaController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\KategoriController;
 use App\Http\Controllers\PotensiAreaController;
+use App\Http\Controllers\Pengurus\PengurusController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -64,6 +65,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/kategori/{id}/edit', [KategoriController::class, 'edit'])->name('kategori.edit');
     Route::put('/kategori/{id}', [KategoriController::class, 'update'])->name('kategori.update');
     Route::delete('/kategori/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
+});
+
+// Pengurus routes group with auth and role middleware
+Route::middleware(['auth', 'role:pengurus'])->prefix('pengurus')->group(function () {
+    Route::get('/dashboard', [PengurusController::class, 'index'])->name('pengurus.dashboard');
 });
 
 Route::resource('potensi-area', PotensiAreaController::class);
