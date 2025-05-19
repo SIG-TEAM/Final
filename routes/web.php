@@ -54,9 +54,7 @@ Route::get('/category/{category}', [PotensiDesaController::class, 'byCategory'])
 
 // Admin routes group with auth and role middleware
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
-    Route::get('/dashboard', function() {
-        return view('admin.index');
-    })->name('admin.dashboard');
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     
     // Individual kategori routes instead of resource
     Route::get('/kategori', [KategoriController::class, 'index'])->name('kategori.index');
