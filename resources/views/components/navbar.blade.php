@@ -40,6 +40,8 @@
                         <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
                         @if(auth()->user()->role === 'admin')
                             <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Admin Dashboard</a>
+                        @elseif(auth()->user()->role === 'pengurus')
+                            <a href="{{ route('pengurus.dashboard') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Pengurus Dashboard</a>
                         @endif
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
