@@ -24,6 +24,35 @@
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
         
+        <style>
+            html, body {
+                height: 100%;
+                width: 100%;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+            }
+            #map {
+                height: 100dvh;
+                width: 100vw;
+                min-height: 100dvh;
+                min-width: 100vw;
+                position: relative;
+                z-index: 1;
+            }
+            #sidebar {
+                overflow-y: auto;
+                max-height: 100dvh;
+                transition: width 0.3s;
+                position: absolute;
+                right: 0;
+                top: 0;
+                z-index: 50;
+                background: white;
+                height: 100dvh;
+            }
+        </style>
+        
         <!-- Additional styles for each page -->
         @yield('styles')
         
