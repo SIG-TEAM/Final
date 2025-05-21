@@ -14,7 +14,6 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         
-        
         <!-- Additional styles for each page -->
         @yield('styles')
         
@@ -33,7 +32,7 @@
                  x-transition:leave-end="-translate-x-full"
                  class="fixed left-0 z-30 flex-shrink-0 w-64 h-full text-white bg-green-800 rounded-r-xl">
                 <div class="flex items-center justify-between p-4 text-lg font-bold border-b border-green-700">
-                    <span>Pengurus Panel</span>
+                    <span>Panel Pengurus</span>
                     <button @click="sidebarOpen = false" class="text-white">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -42,12 +41,16 @@
                 </div>
                 <nav class="mt-4">
                     <ul class="space-y-2">
-                        <li class="hover:bg-green-500">
+                        <li class="hover:bg-green-700">
                             <a href="{{ route('pengurus.dashboard') }}" class="block py-2.5 px-4 rounded">
-                                 Dashboard
+                                Dashboard
                             </a>
                         </li>
-                        <!-- Tambahkan menu lain khusus pengurus di sini jika diperlukan -->
+                        <li class="hover:bg-green-700">
+                            <a href="{{ route('potensi.approval') }}" class="block py-2.5 px-4 rounded">
+                                Approval Potensi Desa
+                            </a>
+                        </li>
                     </ul>
                 </nav>
             </div>
@@ -82,6 +85,5 @@
                 </main>
             </div>
         </div>
-        
     </body>
 </html>

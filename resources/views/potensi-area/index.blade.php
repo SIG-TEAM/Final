@@ -87,6 +87,20 @@
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $area->created_at }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            @if(auth()->user() && auth()->user()->role === 'pengurus')
+                                @if(!$area->is_approved)
+                                    <form action="{{ route('potensi-area.approve', $area->id) }}" method="POST" class="inline">
+                                        @csrf
+                                        <button type="submit" class="text-green-600 hover:text-green-900">
+                                            Setujui
+                                        </button>
+                                    </form>
+                                @else
+                                    <span class="text-green-600">Sudah Disetujui</span>
+                                @endif
+                            @endif
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $area->updated_at }}</td>
                     </tr>
                     @empty

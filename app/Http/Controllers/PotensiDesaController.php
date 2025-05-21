@@ -108,4 +108,14 @@ class PotensiDesaController extends Controller
             'potensi' => $potensi
         ]);
     }
+
+    public function approve($id)
+    {
+        $potensiDesa = PotensiDesa::findOrFail($id);
+        $potensiDesa->is_approved = true;
+        $potensiDesa->save();
+
+        return redirect()->route('potensi-desa.index')
+            ->with('success', 'Data potensi desa berhasil disetujui');
+    }
 }

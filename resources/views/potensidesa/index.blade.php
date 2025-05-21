@@ -168,3 +168,17 @@
     }
 </script>
 @endsection
+<td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+    @if(auth()->user() && auth()->user()->role === 'pengurus')
+        @if(!$potensi->is_approved)
+            <form action="{{ route('potensi-desa.approve', $potensi->id) }}" method="POST" class="inline">
+                @csrf
+                <button type="submit" class="text-green-600 hover:text-green-900">
+                    Setujui
+                </button>
+            </form>
+        @else
+            <span class="text-green-600">Sudah Disetujui</span>
+        @endif
+    @endif
+</td>

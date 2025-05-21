@@ -68,6 +68,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 // Pengurus routes group with auth and role middleware
 Route::middleware(['auth', 'role:pengurus'])->prefix('pengurus')->group(function () {
     Route::get('/dashboard', [PengurusController::class, 'index'])->name('pengurus.dashboard');
+    Route::post('/potensi-area/{id}/approve', [PotensiAreaController::class, 'approve'])->name('potensi-area.approve');
+    Route::post('/potensi-desa/{id}/approve', [PotensiDesaController::class, 'approve'])->name('potensi-desa.approve');
+    Route::get('/pengurus/potensi/approval', [PengurusController::class, 'approvalIndex'])->name('potensi.approval');
 });
 
 Route::resource('potensi-area', PotensiAreaController::class);

@@ -108,4 +108,13 @@ class PotensiAreaController extends Controller
 
         return redirect()->route('potensi-area.index')->with('success', 'Data potensi berhasil dihapus!');
     }
+
+    public function approve($id)
+    {
+        $potensiArea = PotensiArea::findOrFail($id);
+        $potensiArea->is_approved = true;
+        $potensiArea->save();
+        return redirect()->route('potensi-area.index')
+            ->with('success', 'Data potensi area berhasil disetujui');
+    }
 }
