@@ -1,3 +1,12 @@
+<!-- Tambahkan di atas @section('content') -->
+<style>
+    html, body {
+        height: auto !important;
+        min-height: 100%;
+        overflow-y: auto !important;
+    }
+</style>
+
 @extends('layouts.app')
 
 @section('content')
@@ -57,8 +66,12 @@
                         <label for="map" class="block text-sm font-medium text-gray-700 after:content-['*'] after:text-red-500">
                             Gambar Titik atau Polygon di Peta
                         </label>
-                        <div id="map" class="w-full mt-1 rounded-md h-96"></div>
-                        <p class="mt-2 text-xs text-gray-500">Gambar polygon area dengan mengklik tombol polygon di peta kemudian klik titik-titik di peta untuk membentuk area.</p>
+                        <div class="w-full mt-1 rounded-md overflow-hidden border border-gray-300" style="height: 400px; min-height: 300px;">
+                            <div id="map" style="width: 100%; height: 100%;"></div>
+                        </div>
+                        <p class="mt-2 text-xs text-gray-500">
+                            Gambar polygon area dengan mengklik tombol polygon di peta kemudian klik titik-titik di peta untuk membentuk area.
+                        </p>
                         <textarea name="polygon" id="polygon-coords" class="hidden"></textarea>
                         <textarea name="titik_potensi" id="marker-coords" class="hidden"></textarea>
                         <div id="polygon-status" class="hidden px-4 py-3 mt-3 text-yellow-700 border border-yellow-400 rounded-md bg-yellow-50">

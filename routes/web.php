@@ -63,6 +63,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/kategori/{id}/edit', [KategoriController::class, 'edit'])->name('kategori.edit');
     Route::put('/kategori/{id}', [KategoriController::class, 'update'])->name('kategori.update');
     Route::delete('/kategori/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
+    Route::get('/verifikasi-potensi', [App\Http\Controllers\Admin\VerifikasiPotensiController::class, 'index'])->name('admin.verifikasi-potensi');
+    Route::get('/potensi-desa/{id}/detail', [App\Http\Controllers\Admin\VerifikasiPotensiController::class, 'show'])
+        ->name('admin.potensi-desa.detail');
+    Route::patch('/potensi-desa/{id}/reject', [App\Http\Controllers\Admin\VerifikasiPotensiController::class, 'reject'])
+        ->name('admin.potensi-desa.reject');
 });
 
 // Pengurus routes group with auth and role middleware

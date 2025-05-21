@@ -24,6 +24,10 @@ return new class extends Migration
             $table->boolean('is_approved')->default(false);
             $table->timestamps();
         });
+
+        Schema::connection('sig_database')->table('potensi_area', function (Blueprint $table) {
+            $table->boolean('is_approved')->default(0)->after('foto');
+        });
     }
 
     /**
@@ -32,5 +36,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('potensi_areas');
+
+        Schema::connection('sig_database')->table('potensi_area', function (Blueprint $table) {
+            $table->dropColumn('is_approved');
+        });
     }
 };
