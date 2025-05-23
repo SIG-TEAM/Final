@@ -21,12 +21,7 @@ return new class extends Migration
             $table->json('polygon')->nullable(); // Simpan koordinat sebagai array JSON
             $table->string('foto')->nullable(); // Tambahkan kolom untuk menyimpan path foto
             $table->json('titik_potensi')->nullable();
-            $table->boolean('is_approved')->default(false);
             $table->timestamps();
-        });
-
-        Schema::connection('sig_database')->table('potensi_area', function (Blueprint $table) {
-            $table->boolean('is_approved')->default(0)->after('foto');
         });
     }
 
@@ -36,9 +31,5 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('potensi_areas');
-
-        Schema::connection('sig_database')->table('potensi_area', function (Blueprint $table) {
-            $table->dropColumn('is_approved');
-        });
     }
 };
