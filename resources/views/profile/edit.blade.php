@@ -1,29 +1,22 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Profile') }}
-        </h2>
-    </x-slot>
-
+    @section('content')
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-profile-information-form')
+        <div class="mx-auto space-y-6 max-w-7xl sm:px-6 lg:px-8">
+            @if (Auth::check() && Auth::user()->role === 'pengguna')
+                <div class="p-4 bg-white shadow sm:p-8 sm:rounded-lg">
+                    <div class="max-w-xl">
+                        @include('profile.partials.request-penduduk-form')
+                    </div>
                 </div>
-            </div>
-
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-password-form')
+            @endif
+            @if (Auth::check() && Auth::user()->role === 'admin')
+                <div class="p-4 bg-white shadow sm:p-8 sm:rounded-lg">
+                    <div class="max-w-4xl">
+                        @include('profile.partials.manage-role-requests', ['requests' => $requests])
+                    </div>
                 </div>
-            </div>
-
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.delete-user-form')
-                </div>
-            </div>
+            @endif
         </div>
     </div>
+    @endsection
 </x-app-layout>

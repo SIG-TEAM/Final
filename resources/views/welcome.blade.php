@@ -12,10 +12,13 @@
     let currentMarker;
     let selectedLocation;
 
+    const userRole = "{{ Auth::check() ? Auth::user()->role : '' }}";
+
     function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
             center: { lat: -6.9383, lng: 107.7190 },
             zoom: 13,
+            disableDefaultUI: true,
             styles: [
                 {
                     featureType: "poi",
@@ -40,7 +43,11 @@
         });
 
         map.addListener("click", function (event) {
-            addMarker(event.latLng);
+            if (userRole === 'penduduk') {
+                addMarker(event.latLng);
+            } else {
+                alert("Anda tidak memiliki izin untuk menambahkan marker.");
+            }
         });
     }
 
@@ -74,6 +81,7 @@
         const sidebar = document.getElementById("sidebar");
         const sidebarContent = document.getElementById("sidebar-content");
 
+        // Tambahkan kelas untuk menampilkan sidebar
         sidebar.classList.add("w-96");
         sidebar.classList.remove("w-0");
 
@@ -81,11 +89,6 @@
             <div class="p-6">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-2xl font-bold text-green-700">Tambah Potensi Area</h2>
-                    <button onclick="closeSidebar()" class="text-gray-500 hover:text-gray-700 focus:outline-none">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
                 </div>
                 
                 <div class="bg-green-50 p-4 rounded-lg mb-6 border border-green-200">
@@ -139,7 +142,7 @@
         const sidebar = document.getElementById("sidebar");
         sidebar.classList.add("w-0");
         sidebar.classList.remove("w-96");
-        
+
         if (currentMarker) {
             currentMarker.setMap(null);
             currentMarker = null;
@@ -154,16 +157,6 @@ onload="initMap()"
 
 @section('content')
 <div class="relative">
-    <!-- Tombol Tambah Potensi Area -->
-    <div class="absolute top-4 right-4 z-10">
-        <a href="/potensi-area/create" class="inline-flex items-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-            Tambah Potensi Area
-        </a>
-    </div>
-
     <div class="flex h-screen">
         <div id="map" class="flex-grow"></div>
         <div id="sidebar" class="w-0 bg-white h-full overflow-hidden transition-all duration-300 shadow-xl border-l border-gray-200">

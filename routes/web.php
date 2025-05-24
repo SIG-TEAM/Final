@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PotensiDesaController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\KategoriController;
+use App\Http\Controllers\PotensiAreaController;
+use App\Http\Controllers\Pengurus\PengurusController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -19,7 +21,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    if (auth()->check()) {
+        return view('welcome');
+    }
+    return view('landingPage');
 });
 
 Route::get('/dashboard', function () {
@@ -49,9 +54,7 @@ Route::get('/category/{category}', [PotensiDesaController::class, 'byCategory'])
 
 // Admin routes group with auth and role middleware
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
-    Route::get('/dashboard', function() {
-        return view('admin.index');
-    })->name('admin.dashboard');
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     
     // Individual kategori routes instead of resource
     Route::get('/kategori', [KategoriController::class, 'index'])->name('kategori.index');
@@ -62,19 +65,16 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::delete('/kategori/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
 });
 
-Route::resource('potensi-area', PotensiAreaController::class);
-Route::get('/potensi-area/create', [PotensiAreaController::class, 'create'])->name('potensi-area.create');
-Route::post('/potensi-area', [PotensiAreaController::class, 'store'])->name('potensi-area.store');
+// Pengurus routes group with auth and role middleware
+Route::middleware(['auth', 'role:pengurus'])->prefix('pengurus')->group(function () {
+    Route::get('/dashboard', [PengurusController::class, 'index'])->name('pengurus.dashboard');
+});
 
 Route::resource('potensi-area', PotensiAreaController::class);
 Route::get('/potensi-area/create', [PotensiAreaController::class, 'create'])->name('potensi-area.create');
 Route::post('/potensi-area', [PotensiAreaController::class, 'store'])->name('potensi-area.store');
 
-Route::get('/rekomendasi', [RekomendasiDesaController::class, 'index'])->name('rekomendasi.index');
-Route::get('/rekomendasi/create', [RekomendasiDesaController::class, 'create'])->name('rekomendasi.create');
-Route::post('/rekomendasi', [RekomendasiDesaController::class, 'store'])->name('rekomendasi.store');
-Route::get('/rekomendasi/{id}', [RekomendasiDesaController::class, 'show'])->name('rekomendasi.show');
-Route::get('/rekomendasi/{id}/edit', [RekomendasiDesaController::class, 'edit'])->name('rekomendasi.edit');
-Route::put('/rekomendasi/{id}', [RekomendasiDesaController::class, 'update'])->name('rekomendasi.update');
-Route::delete('/rekomendasi/{id}', [RekomendasiDesaController::class, 'destroy'])->name('rekomendasi.destroy');
+Route::post('/profile/request-role-change', [ProfileController::class, 'requestRoleChange'])->name('profile.requestRoleChange');
+Route::post('/admin/approve-role-change/{userId}', [ProfileController::class, 'approveRoleChange'])->name('profile.approveRoleChange');
+
 require __DIR__.'/auth.php';
