@@ -63,5 +63,6 @@ class PengurusController extends Controller
         $data['potensiAreaChart'] = $potensiAreaChart;
         
         return view('pengurus.index', $data);
+        
     }
 } 
