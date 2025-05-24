@@ -13,11 +13,8 @@ class VerifikasiPotensiController extends Controller
      */
     public function index()
     {
-        // Mengambil data potensi area dengan pagination
-        $potensiDesa = PotensiArea::with('user')
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
-            
+        // Ambil data yang belum diverifikasi
+        $potensiDesa = PotensiArea::whereNull('is_approved')->orderBy('created_at', 'desc')->paginate(10);
         return view('admin.verifikasi-potensi.index', compact('potensiDesa'));
     }
 
@@ -35,7 +32,7 @@ class VerifikasiPotensiController extends Controller
      */
     public function approve($id)
     {
-        $potensi = \App\Models\PotensiArea::findOrFail($id);
+        $potensi = PotensiArea::findOrFail($id);
         $potensi->is_approved = 1;
         $potensi->save();
 
@@ -47,16 +44,12 @@ class VerifikasiPotensiController extends Controller
      */
     public function reject(Request $request, $id)
     {
-        $request->validate([
-            'alasan' => 'required|string|max:1000'
-        ]);
-
-        $potensi = \App\Models\PotensiArea::findOrFail($id);
-        $potensi->is_approved = 0;
-        $potensi->alasan = $request->alasan; // jika ada kolom alasan
+        $potensi = PotensiArea::findOrFail($id);
+        $potensi->is_approved = null; // Ubah ke null
+        $potensi->alasan = $request->alasan;
         $potensi->save();
 
-        return redirect()->back()->with('success', 'Potensi area berhasil ditolak.');
+        return redirect()->back()->with('success', 'Potensi area dikembalikan ke status pending.');
     }
 
     /**
@@ -123,5 +116,17 @@ class VerifikasiPotensiController extends Controller
         $potensiDesa = $query->orderBy('created_at', 'desc')->paginate(10);
         
         return view('admin.verifikasi-potensi.index', compact('potensiDesa'));
+    }
+
+    /**
+     * Set the specified resource as pending.
+     */
+    public function setPending($id)
+    {
+        $potensi = PotensiArea::findOrFail($id);
+        $potensi->is_approved = null;
+        $potensi->save();
+
+        return redirect()->back()->with('success', 'Status potensi area direset ke pending.');
     }
 }

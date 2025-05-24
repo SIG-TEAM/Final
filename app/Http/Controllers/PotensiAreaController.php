@@ -10,10 +10,8 @@ class PotensiAreaController extends Controller
 {
     public function index()
     {
-        // Ambil semua data potensi area dari database
-        $potensiAreas = PotensiArea::all();
-
-        // Kirim data ke view
+        // Contoh: tampilkan semua data yang sudah di-approve
+        $potensiAreas = \App\Models\PotensiArea::where('is_approved', 1)->get();
         return view('potensi-area.index', compact('potensiAreas'));
     }
 
@@ -44,6 +42,8 @@ class PotensiAreaController extends Controller
             $fotoPath = $request->file('foto')->store('potensi-area-foto', 'public');
             $validated['foto'] = $fotoPath;
         }
+
+        // Jangan tambahkan $validated['is_approved'] di sini
 
         PotensiArea::create($validated);
 

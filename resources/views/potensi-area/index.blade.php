@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto py-6 px-4">
+<div class="container mx-auto py-6 px-4 overflow-auto min-h-screen">
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold text-gray-800">Daftar Potensi Area</h1>
         <a href="{{ route('potensi-area.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded flex items-center">
@@ -80,7 +80,7 @@
         </div>
     </div>
 
-    <!-- OpenStreetMap -->
+    <!-- Map Section -->
     <div class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
         <div class="p-6 border-b border-gray-200">
             <h2 class="text-xl font-semibold text-gray-800">Peta Potensi Area (OpenStreetMap)</h2>

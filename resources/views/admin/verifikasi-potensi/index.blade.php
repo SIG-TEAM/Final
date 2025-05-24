@@ -62,85 +62,51 @@
                     <tbody class="bg-white divide-y divide-gray-200">
                         @forelse($potensiDesa as $item)
                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <td class="px-6 py-4">
                                     {{ $item->id }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-gray-900">{{ $item->nama }}</div>
+                                <td class="px-6 py-4">
+                                    {{ $item->nama }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                        @if(stripos($item->kategori, 'wisata') !== false) bg-blue-100 text-blue-800 
-                                        @elseif(stripos($item->kategori, 'peternakan') !== false) bg-green-100 text-green-800 
-                                        @elseif(stripos($item->kategori, 'pertanian') !== false) bg-yellow-100 text-yellow-800 
-                                        @elseif(stripos($item->kategori, 'kuliner') !== false) bg-purple-100 text-purple-800 
-                                        @else bg-gray-100 text-gray-800 @endif">
-                                        {{ ucfirst($item->kategori) }}
+                                <td class="px-6 py-4">
+                                    {{ $item->kategori }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ $item->deskripsi }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{ $item->latitude }}, {{ $item->longitude }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                        Menunggu Verifikasi
                                     </span>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <div class="text-sm text-gray-900 max-w-xs">
-                                        <p class="truncate" title="{{ $item->deskripsi }}">
-                                            {{ Str::limit($item->deskripsi, 50) }}
-                                        </p>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-xs text-gray-500">
-                                        <div>Lat: {{ number_format($item->latitude, 6) }}</div>
-                                        <div>Long: {{ number_format($item->longitude, 6) }}</div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    @if($item->is_approved === null)
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                            Menunggu Verifikasi
-                                        </span>
-                                    @elseif($item->is_approved == 1)
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                            Disetujui
-                                        </span>
-                                    @else
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                            Ditolak
-                                        </span>
-                                    @endif
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    @if($item->foto && $item->foto !== 'null')
-                                        <button type="button" class="text-blue-600 hover:text-blue-900 text-sm" 
-                                            onclick="openImageModal('{{ asset('storage/' . $item->foto) }}', '{{ $item->nama }}')">
-                                            <svg class="w-5 h-5 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                            </svg>
-                                            Lihat Foto
-                                        </button>
+                                    @if($item->foto)
+                                        <img src="{{ asset('storage/' . $item->foto) }}" alt="Foto" class="w-16 h-16 object-cover rounded">
                                     @else
                                         <span class="text-gray-400 text-sm">Tidak ada foto</span>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <td class="px-6 py-4">
                                     {{ $item->created_at ? $item->created_at->format('d/m/Y H:i') : '-' }}
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                    @if($item->is_approved === null)
-                                        <div class="flex space-x-2">
-                                            <form action="{{ route('admin.potensi-area.approve', $item->id) }}" method="POST" class="inline">
-                                                @csrf
-                                                @method('PATCH')
-                                                <input type="hidden" name="is_approved" value="1">
-                                                <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1.5 rounded-md text-sm">
-                                                    Setujui
-                                                </button>
-                                            </form>
-                                            <button type="button" onclick="openRejectModal('{{ $item->id }}')" 
-                                                class="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-md text-sm">
-                                                Tolak
-                                            </button>
-                                        </div>
-                                    @else
-                                        <span class="text-gray-400 text-sm">Sudah diverifikasi</span>
-                                    @endif
+                                <td class="px-6 py-4 text-right">
+                                    <form action="{{ route('admin.potensi-area.approve', $item->id) }}" method="POST" class="inline">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1.5 rounded-md text-sm">
+                                            Setujui
+                                        </button>
+                                    </form>
+                                    <form action="{{ route('admin.potensi-area.reject', $item->id) }}" method="POST" class="inline ml-2">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-md text-sm">
+                                            Tolak
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         @empty
