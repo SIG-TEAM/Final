@@ -15,6 +15,7 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -24,6 +25,36 @@
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
         
+        <style>
+            html, body {
+                height: 100%;
+                width: 100%;
+                margin: 0;
+                padding: 0;
+                /* Hapus atau ubah baris berikut agar scroll diizinkan */
+                /* overflow: hidden; */
+            }
+            #map {
+                height: 100dvh;
+                width: 100vw;
+                min-height: 100dvh;
+                min-width: 100vw;
+                position: relative;
+                z-index: 1;
+            }
+            #sidebar {
+                overflow-y: auto;
+                max-height: 100dvh;
+                transition: width 0.3s;
+                position: absolute;
+                right: 0;
+                top: 0;
+                z-index: 50;
+                background: white;
+                height: 100dvh;
+            }
+        </style>
+        
         <!-- Additional styles for each page -->
         @yield('styles')
         
@@ -31,10 +62,11 @@
         @yield('head')
     </head>
     <body class="p-0 m-0 font-sans antialiased bg-gray-100" @yield('body_attributes')>
-        <div class="min-h-screen">
+        <div class="min-h-screen relative">
             <!-- Include navbar component -->
             <x-navbar />
-
+            <!-- Spacer for navbar height -->
+            <div class="h-[56px]"></div>
             <!-- Page Heading -->
             @if (isset($header))
                 <header class="bg-white shadow">
@@ -43,7 +75,6 @@
                     </div>
                 </header>
             @endif
-
             <!-- Page Content -->
             <main>
                 @yield('content')

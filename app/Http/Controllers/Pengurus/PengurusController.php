@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Pengurus;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\User;
 use App\Models\PotensiDesa;
 use App\Models\PotensiArea;
 use App\Models\Kategori;
@@ -65,4 +64,4 @@ class PengurusController extends Controller
         return view('pengurus.index', $data);
         
     }
-} 
+}

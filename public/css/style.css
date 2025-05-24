@@ -1,0 +1,263 @@
+
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.card {
+    border: none;
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    background: #ffffff;
+    margin-top: 2rem;
+}
+
+.card-header {
+    background-color: #ffffff;
+    border-bottom: none;
+    padding: 1.5rem 1.5rem 0 1.5rem;
+}
+
+.card-header h3 {
+    font-weight: 600;
+    color: #333;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #333;
+}
+
+input.form-control,
+textarea.form-control {
+    border-radius: 0.5rem;
+    border: 1px solid #ced4da;
+    transition: all 0.3s ease;
+}
+
+input.form-control:focus,
+textarea.form-control:focus {
+    border-color: #4c9aff;
+    box-shadow: 0 0 0 0.2rem rgba(76, 154, 255, 0.25);
+}
+
+.required-label::after {
+    content: '*';
+    color: red;
+    margin-left: 0.25rem;
+}
+
+.btn-primary {
+    background-color: #4c9aff;
+    border-color: #4c9aff;
+    font-weight: 500;
+}
+
+.btn-primary:hover {
+    background-color: #3c87dc;
+    border-color: #3c87dc;
+}
+
+.btn-outline-primary {
+    border-color: #4c9aff;
+    color: #4c9aff;
+}
+
+.btn-outline-primary:hover {
+    background-color: #4c9aff;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.form-text {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+@media (max-width: 768px) {
+    .card {
+        margin: 1rem;
+    }
+}
+
+.card {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+    background-color: #fff;
+}
+
+.card-header h3 {
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.form-label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    display: inline-block;
+}
+
+.required-label::after {
+    content: ' *';
+    color: red;
+}
+
+.form-control {
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #ced4da;
+    transition: border 0.3s ease;
+    width: 100%;
+}
+
+.form-control:focus {
+    border-color: #4c9aff;
+    box-shadow: 0 0 0 0.2rem rgba(76, 154, 255, 0.25);
+}
+
+.form-text {
+    color: #6c757d;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.mb-3, .mb-4 {
+    margin-bottom: 1.5rem !important;
+}
+
+.btn {
+    border-radius: 0.5rem;
+    padding: 0.5rem 1.25rem;
+    font-weight: 500;
+}
+
+.btn-primary {
+    background-color: #4c9aff;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #3a88e0;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border: none;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.d-grid.gap-2.d-md-flex {
+    gap: 0.75rem;
+}
+
+@media (max-width: 576px) {
+    .btn {
+        width: 100%;
+    }
+
+    .d-grid.gap-2.d-md-flex {
+        flex-direction: column;
+    }
+}
+
+.table thead th {
+    background-color: #f5f7fa;
+    font-weight: 600;
+}
+
+.table td, .table th {
+    vertical-align: middle;
+}
+
+.card {
+    border-radius: 1rem;
+    border: none;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    border: none;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border: none;
+}
+
+.btn-danger:hover {
+    background-color: #bd2130;
+}
+
+.table {
+    width: 100%;
+    table-layout: auto;
+}
+
+.table td,
+.table th {
+    vertical-align: middle;
+    text-align: center;
+}
+
+.table img {
+    max-width: 80px;
+    height: auto;
+    border-radius: 0.5rem;
+}
+
+.table .btn {
+    width: 70px;
+    padding: 4px 8px;
+    font-size: 0.85rem;
+}
+
+.table td .btn + .btn {
+    margin-left: 4px;
+}
+
+.card-body {
+    overflow-x: auto;
+}
+
+.d-flex.gap-2 {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+/* Optional: responsive text wrapping */
+td:nth-child(4) {
+    white-space: normal;
+    word-break: break-word;
+    max-width: 200px;
+}
+
+.table td, .table th {
+    vertical-align: middle;
+}
+
+.table img {
+    display: block;
+    margin: 0 auto;
+}

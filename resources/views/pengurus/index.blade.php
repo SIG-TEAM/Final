@@ -3,7 +3,8 @@
 @php
     use App\Models\User;
     use App\Models\PotensiDesa;
-    
+    use Illuminate\Support\Facades\Storage;
+
     $totalUsers = User::where('role', 'penduduk')->count();
     $totalPotensi = PotensiDesa::count();
 @endphp
