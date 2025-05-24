@@ -65,6 +65,9 @@ class AdminController extends Controller
         $data['potensiDesaChart'] = $potensiDesaChart;
         $data['potensiAreaChart'] = $potensiAreaChart;
         
+        // Ambil semua potensi area untuk katalog
+        $data['potensiAreas'] = \App\Models\PotensiArea::all();
+        
         // Return view with extracted variables
         return view('admin.index', $data);
     }
