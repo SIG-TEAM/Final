@@ -5,6 +5,7 @@ use App\Http\Controllers\PotensiDesaController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\KategoriController;
 use App\Http\Controllers\PotensiAreaController;
+use App\Http\Controllers\Pengurus\PengurusController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -53,9 +54,7 @@ Route::get('/category/{category}', [PotensiDesaController::class, 'byCategory'])
 
 // Admin routes group with auth and role middleware
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
-    Route::get('/dashboard', function() {
-        return view('admin.index');
-    })->name('admin.dashboard');
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     
     // Individual kategori routes instead of resource
     Route::get('/kategori', [KategoriController::class, 'index'])->name('kategori.index');
@@ -64,6 +63,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/kategori/{id}/edit', [KategoriController::class, 'edit'])->name('kategori.edit');
     Route::put('/kategori/{id}', [KategoriController::class, 'update'])->name('kategori.update');
     Route::delete('/kategori/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
+});
+
+// Pengurus routes group with auth and role middleware
+Route::middleware(['auth', 'role:pengurus'])->prefix('pengurus')->group(function () {
+    Route::get('/dashboard', [PengurusController::class, 'index'])->name('pengurus.dashboard');
 });
 
 Route::resource('potensi-area', PotensiAreaController::class);
