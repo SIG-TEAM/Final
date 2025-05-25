@@ -9,18 +9,20 @@
             <!-- Tab Navigation -->
             <div class="mb-6 border-b">
                 <div class="flex space-x-4">
-                    <a href="#" 
-                       onclick="switchTab('titik'); return false;" 
-                       class="py-2 px-4 border-b-2 border-transparent hover:border-green-500 tab-button active text-green-500"
-                       id="titik-tab">
+                    <button 
+                        class="py-2 px-4 border-b-2 border-green-500 tab-button active text-green-500"
+                        id="titik-tab"
+                        type="button"
+                        data-tab="titik">
                         Potensi Titik
-                    </a>
-                    <a href="#" 
-                       onclick="switchTab('area'); return false;" 
-                       class="py-2 px-4 border-b-2 border-transparent hover:border-green-500 tab-button text-gray-500"
-                       id="area-tab">
+                    </button>
+                    <button 
+                        class="py-2 px-4 border-b-2 border-transparent tab-button text-gray-500"
+                        id="area-tab"
+                        type="button"
+                        data-tab="area">
                         Potensi Area
-                    </a>
+                    </button>
                 </div>
             </div>
 
@@ -74,7 +76,7 @@
                                 <td class="px-6 py-4">{{ $area->nama }}</td>
                                 <td class="px-6 py-4">{{ $area->kategori }}</td>
                                 <td class="px-6 py-4">
-                                    <form action="{{ route('potensi-area.approve', $area->id) }}" method="POST" class="inline">
+                                    <form action="{{ route('pengurus.potensi-area.approve', $area->id) }}" method="POST" class="inline">
                                         @csrf
                                         <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
                                             Setujui
@@ -95,26 +97,28 @@
 
 @push('scripts')
 <script>
-function switchTab(tabName) {
-    // Sembunyikan semua konten tab
-    document.querySelectorAll('.tab-content').forEach(content => {
-        content.classList.add('hidden');
+document.querySelectorAll('.tab-button').forEach(btn => {
+    btn.addEventListener('click', function() {
+        // Sembunyikan semua konten tab
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.add('hidden');
+        });
+
+        // Reset semua tab ke tidak aktif
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.classList.remove('active', 'border-green-500', 'text-green-500');
+            button.classList.add('border-transparent', 'text-gray-500');
+        });
+
+        // Tampilkan konten tab yang dipilih
+        const tabName = this.getAttribute('data-tab');
+        document.getElementById(`${tabName}-content`).classList.remove('hidden');
+
+        // Aktifkan tab yang dipilih
+        this.classList.add('active', 'border-green-500', 'text-green-500');
+        this.classList.remove('border-transparent', 'text-gray-500');
     });
-    
-    // Reset semua tab ke warna hitam tanpa underline
-    document.querySelectorAll('.tab-button').forEach(button => {
-        button.classList.remove('active', 'border-green-500', 'text-green-500');
-        button.classList.add('border-transparent', 'text-gray-500');
-    });
-    
-    // Tampilkan konten tab yang dipilih
-    document.getElementById(`${tabName}-content`).classList.remove('hidden');
-    
-    // Aktifkan tab yang dipilih dengan warna hijau dan underline
-    const selectedTab = document.getElementById(`${tabName}-tab`);
-    selectedTab.classList.add('active', 'border-green-500', 'text-green-500');
-    selectedTab.classList.remove('border-transparent', 'text-gray-500');
-}
+});
 </script>
 @endpush
 

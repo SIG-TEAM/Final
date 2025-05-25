@@ -47,7 +47,7 @@
                             </a>
                         </li>
                         <li class="hover:bg-green-700">
-                            <a href="{{ route('potensi.approval') }}" class="block py-2.5 px-4 rounded">
+                            <a href="{{ route('pengurus.potensi.approval') }}" class="block py-2.5 px-4 rounded">
                                 Approval Potensi Desa
                             </a>
                         </li>

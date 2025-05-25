@@ -5,6 +5,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\PotensiArea;
 use App\Models\PotensiDesa;
+// Tambahkan import berikut
+use App\Models\User;
+use App\Models\Kategori;
+use Illuminate\Support\Facades\DB;
+use ArielMejiaDev\LarapexCharts\LarapexChart;
 
 class PengurusController extends Controller
 {
@@ -66,8 +71,8 @@ class PengurusController extends Controller
         return view('pengurus.dashboard');
     }
     public function approvalIndex(){
-       $potensiAreas = PotensiArea::where('is_approved', false)->get();
-       $potensiDesas = PotensiDesa::where('is_approved', false)->get();
+       $potensiAreas = \App\Models\PotensiArea::whereNull('is_approved')->get();
+       $potensiDesas = \App\Models\PotensiDesa::whereNull('is_approved')->get();
        return view('pengurus.approval.index', compact('potensiAreas', 'potensiDesas'));
     }
-} 
+}

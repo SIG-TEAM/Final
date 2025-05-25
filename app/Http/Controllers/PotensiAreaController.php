@@ -112,6 +112,8 @@ class PotensiAreaController extends Controller
     public function approve($id)
     {
         $potensiArea = PotensiArea::findOrFail($id);
+        $potensiAreas = PotensiArea::whereNull('is_approve')->get();
+        return view('potensi-area.approval', compact('potensiAreas'));
         $potensiArea->is_approved = true;
         $potensiArea->save();
         return redirect()->route('potensi-area.index')
