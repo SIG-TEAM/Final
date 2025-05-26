@@ -7,6 +7,7 @@
     let map;
     let currentMarker;
     let selectedLocation;
+    let approved = {!! json_encode($approvedAreas) !!};
 
     const userRole = "{{ Auth::check() ? Auth::user()->role : '' }}";
 
@@ -35,6 +36,58 @@
                     east: 107.7990
                 },
                 strictBounds: true
+            }
+        });
+
+        // Tampilkan marker dan polygon untuk setiap area yang approved
+        approved.forEach(area => {
+            // Marker
+            const marker = new google.maps.Marker({
+                position: { lat: parseFloat(area.latitude), lng: parseFloat(area.longitude) },
+                map: map,
+                title: area.nama,
+                icon: {
+                    url: "http://maps.google.com/mapfiles/ms/icons/green-dot.png"
+                }
+            });
+
+            // InfoWindow
+            const infoWindow = new google.maps.InfoWindow({
+                content: `<strong>${area.nama}</strong><br>${area.kategori}<br>${area.deskripsi}`
+            });
+            marker.addListener('click', function() {
+                infoWindow.open(map, marker);
+            });
+
+            // Polygon (jika ada)
+            if (area.polygon) {
+                let polygonCoords;
+                try {
+                    polygonCoords = Array.isArray(area.polygon) ? area.polygon : JSON.parse(area.polygon);
+                } catch (e) {
+                    polygonCoords = null;
+                }
+                if (polygonCoords && Array.isArray(polygonCoords) && polygonCoords.length > 2) {
+                    // Format koordinat ke Google Maps
+                    const path = polygonCoords.map(p => {
+                        if (Array.isArray(p)) {
+                            return { lat: parseFloat(p[0]), lng: parseFloat(p[1]) };
+                        } else if (typeof p === 'object' && p.lat && p.lng) {
+                            return { lat: parseFloat(p.lat), lng: parseFloat(p.lng) };
+                        }
+                        return null;
+                    }).filter(Boolean);
+
+                    const polygon = new google.maps.Polygon({
+                        paths: path,
+                        strokeColor: '#008000',
+                        strokeOpacity: 0.8,
+                        strokeWeight: 2,
+                        fillColor: '#008000',
+                        fillOpacity: 0.2,
+                        map: map
+                    });
+                }
             }
         });
 

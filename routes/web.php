@@ -9,6 +9,8 @@ use App\Http\Controllers\Pengurus\PengurusController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\VerifikasiPotensiController;
 use App\Http\Controllers\Pengurus\PengurusDashboardController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\WelcomeController;
 
 
 /*
@@ -22,12 +24,7 @@ use App\Http\Controllers\Pengurus\PengurusDashboardController;
 |
 */
 
-Route::get('/', function () {
-    if (auth()->check()) {
-        return view('welcome');
-    }
-    return view('landingPage');
-});
+Route::get('/', [WelcomeController::class, 'index']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
