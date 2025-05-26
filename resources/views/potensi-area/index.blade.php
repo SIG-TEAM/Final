@@ -312,16 +312,13 @@
     };
 
     function initMap() {
-        // Initialize map centered on Indonesia
         map = L.map('map').setView([-2.5489, 118.0149], 5);
-
-        // Add OpenStreetMap tile layer
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors',
             maxZoom: 19
         }).addTo(map);
 
-        // Add data from database
+        // Tambahkan marker/polygon jika ada data
         @foreach($potensiAreas as $area)
             @if($area->latitude && $area->longitude)
                 addAreaToMap({
@@ -339,7 +336,7 @@
             @endif
         @endforeach
 
-        // Fit map to show all markers if we have any
+        // Fit map jika ada marker
         if (markers.length > 0) {
             const group = new L.featureGroup(markers);
             map.fitBounds(group.getBounds().pad(0.1));

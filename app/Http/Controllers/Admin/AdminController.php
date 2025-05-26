@@ -14,6 +14,9 @@ class AdminController extends Controller
 {
     public function index()
     {
+        $pendingPotensiAreas = PotensiArea::where('status', 'pending')->get();
+        $approvedPotensiAreas = PotensiArea::where('status', 'approved')->get();
+        
         // Explicitly define all variables used in the view
         $data = [
             'totalUsers' => User::count(),
@@ -69,6 +72,36 @@ class AdminController extends Controller
         $data['potensiAreas'] = \App\Models\PotensiArea::all();
         
         // Return view with extracted variables
-        return view('admin.index', $data);
+        return view('admin.index', compact(
+            'totalUsers',
+            'totalAdmins',
+            'totalPengurus',
+            'totalPenduduk',
+            'totalPotensiDesa',
+            'totalPotensiArea',
+            'totalKategori',
+            'potensiDesaChart',
+            'potensiAreaChart',
+            'pendingPotensiAreas',
+            'approvedPotensiAreas'
+        ));
+    }
+
+    public function approvePotensiArea($id)
+    {
+        $area = PotensiArea::findOrFail($id);
+        $area->status = 'approved';
+        $area->save();
+        
+        return redirect()->back()->with('success', 'Potensi area berhasil disetujui');
+    }
+
+    public function rejectPotensiArea($id)
+    {
+        $area = PotensiArea::findOrFail($id);
+        $area->status = 'rejected';
+        $area->save();
+        
+        return redirect()->back()->with('success', 'Potensi area berhasil ditolak');
     }
 }
