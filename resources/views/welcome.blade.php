@@ -7,7 +7,8 @@
     let map;
     let currentMarker;
     let selectedLocation;
-    let approved = {!! json_encode($approvedAreas) !!};
+    // Gunakan array kosong jika $approvedAreas tidak ada
+    let approved = {!! json_encode(isset($approvedAreas) ? $approvedAreas : []) !!};
 
     const userRole = "{{ Auth::check() ? Auth::user()->role : '' }}";
 
