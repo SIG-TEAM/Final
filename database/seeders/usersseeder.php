@@ -23,19 +23,19 @@ class usersseeder extends Seeder
                 'role' => 'admin',
             ],
             [
-                'name' => 'penduduk',
+                'name' => 'Penduduk',
                 'email' => 'penduduk@mail.com',
                 'password' => Hash::make('password'),
                 'role' => 'penduduk',
             ],
             [
-                'name' => 'pengurus',
-                'email' => 'Pengurus@mail.com',
+                'name' => 'Pengurus',
+                'email' => 'pengurus@mail.com',
                 'password' => Hash::make('password'),
                 'role' => 'pengurus',
             ],
             [
-                'name' => 'pengguna',
+                'name' => 'Pengguna',
                 'email' => 'pengguna@mail.com',
                 'password' => Hash::make('password'),
                 'role' => 'pengguna',
