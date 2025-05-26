@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('deskripsi')->nullable();
             $table->text('detail')->nullable();
             $table->string('gambar')->nullable();
+            $table->boolean('is_approved')->default(false);
             $table->timestamps();
         });
     }

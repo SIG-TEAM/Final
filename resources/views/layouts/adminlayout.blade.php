@@ -48,8 +48,13 @@
                             </a>
                         </li>
                         <li class="hover:bg-slate-500">
-                            <a href="{{ route('kategori.index') }}" class="block py-2.5 px-4 rounded">
+                            <a href="{{ route('admin.kategori.index') }}" class="block py-2.5 px-4 rounded">
                                 Kategori Potensi
+                            </a>
+                        </li>
+                        <li class="hover:bg-slate-500">
+                            <a href="{{ route('admin.verifikasi-potensi') }}" class="block py-2.5 px-4 rounded">
+                                Verifikasi Potensi Desa
                             </a>
                         </li>
                     </ul>

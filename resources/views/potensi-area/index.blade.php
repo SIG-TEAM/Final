@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto py-6 px-4">
+<div class="container mx-auto py-6 px-4 overflow-auto min-h-screen">
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold text-gray-800">Daftar Potensi Area</h1>
         <a href="{{ route('potensi-area.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded flex items-center">
@@ -40,14 +40,53 @@
         </div>
     </div>
 
-    <!-- Peta -->
+    <!-- Map Controls -->
+    <div class="bg-white rounded-lg shadow-md p-4 mb-4">
+        <div class="flex flex-wrap gap-2 items-center">
+            <label class="text-sm font-medium text-gray-700">Filter Kategori:</label>
+            <select id="kategoriFilter" class="border border-gray-300 rounded px-3 py-1 text-sm">
+                <option value="">Semua Kategori</option>
+                @foreach($potensiAreas->pluck('kategori')->unique() as $kategori)
+                    <option value="{{ $kategori }}">{{ ucfirst($kategori) }}</option>
+                @endforeach
+            </select>
+            
+            <button id="showAllBtn" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
+                Tampilkan Semua
+            </button>
+            
+            <button id="togglePolygons" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">
+                Toggle Polygon
+            </button>
+            
+            <div class="ml-auto flex gap-2">
+                <div class="flex items-center text-sm">
+                    <div class="w-3 h-3 bg-blue-500 rounded-full mr-1"></div>
+                    <span>Wisata</span>
+                </div>
+                <div class="flex items-center text-sm">
+                    <div class="w-3 h-3 bg-green-500 rounded-full mr-1"></div>
+                    <span>Pertanian</span>
+                </div>
+                <div class="flex items-center text-sm">
+                    <div class="w-3 h-3 bg-yellow-500 rounded-full mr-1"></div>
+                    <span>Peternakan</span>
+                </div>
+                <div class="flex items-center text-sm">
+                    <div class="w-3 h-3 bg-purple-500 rounded-full mr-1"></div>
+                    <span>Kuliner</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Map Section -->
     <div class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
         <div class="p-6 border-b border-gray-200">
-            <h2 class="text-xl font-semibold text-gray-800">Peta Potensi Area</h2>
+            <h2 class="text-xl font-semibold text-gray-800">Peta Potensi Area (OpenStreetMap)</h2>
         </div>
-        <div class="relative" style="height: 600px;">
-            <!-- Div Peta -->
-            <div id="map" class="w-full h-full" style="height: 600px;"></div>
+        <div class="relative" style="height: 500px;">
+            <div id="map" class="w-full h-full" style="height: 100%; min-height: 400px;"></div>
         </div>
     </div>
 
@@ -61,37 +100,93 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kategori</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Deskripsi</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Latitude</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Longitude</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Polygon</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Koordinat</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Foto</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Updated At</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($potensiAreas as $area)
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $area->id }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $area->nama }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $area->kategori }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $area->deskripsi }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $area->latitude }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $area->longitude }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $area->polygon }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            @if($area->foto)
-                                <img src="{{ asset('storage/' . $area->foto) }}" alt="Foto {{ $area->nama }}" class="h-12 w-12 object-cover rounded-md">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $area->nama }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                @if(stripos($area->kategori, 'wisata') !== false) bg-blue-100 text-blue-800 
+                                @elseif(stripos($area->kategori, 'peternakan') !== false) bg-yellow-100 text-yellow-800 
+                                @elseif(stripos($area->kategori, 'pertanian') !== false) bg-green-100 text-green-800 
+                                @elseif(stripos($area->kategori, 'kuliner') !== false) bg-purple-100 text-purple-800 
+                                @else bg-gray-100 text-gray-800 @endif">
+                                {{ ucfirst($area->kategori) }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="text-sm text-gray-900 max-w-xs">
+                                <p class="truncate" title="{{ $area->deskripsi }}">{{ Str::limit($area->deskripsi, 50) }}</p>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-500">
+                            <div>Lat: {{ number_format($area->latitude, 6) }}</div>
+                            <div>Lng: {{ number_format($area->longitude, 6) }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            @if($area->is_approved === null)
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                    Menunggu Verifikasi
+                                </span>
+                            @elseif($area->is_approved == 1)
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                    Disetujui
+                                </span>
                             @else
-                                <span class="text-gray-400">Tidak ada foto</span>
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                    Ditolak
+                                </span>
                             @endif
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $area->created_at }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $area->updated_at }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            @if($area->foto && $area->foto !== 'null')
+                                <img src="{{ asset('storage/' . $area->foto) }}" alt="Foto {{ $area->nama }}" 
+                                     class="h-12 w-12 object-cover rounded-md cursor-pointer hover:opacity-75"
+                                     onclick="showImageModal('{{ asset('storage/' . $area->foto) }}', '{{ $area->nama }}')">
+                            @else
+                                <span class="text-gray-400 text-sm">Tidak ada foto</span>
+                            @endif
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ $area->created_at ? $area->created_at->format('d/m/Y') : '-' }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <div class="flex space-x-2">
+                                <button onclick="focusOnMap({{ $area->latitude }}, {{ $area->longitude }}, '{{ $area->nama }}')" 
+                                        class="text-blue-600 hover:text-blue-900 text-sm">
+                                    Lihat di Peta
+                                </button>
+                                @if(auth()->user() && auth()->user()->role === 'pengurus')
+                                    @if($area->is_approved === null)
+                                        <form action="{{ route('potensi-area.approve', $area->id) }}" method="POST" class="inline">
+                                            @csrf
+                                            <button type="submit" class="text-green-600 hover:text-green-900 text-sm">
+                                                Setujui
+                                            </button>
+                                        </form>
+                                    @endif
+                                @endif
+                            </div>
+                        </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="10" class="px-6 py-4 text-center text-gray-500">Tidak ada data potensi area</td>
+                        <td colspan="9" class="px-6 py-4 text-center text-gray-500">
+                            <div class="flex flex-col items-center justify-center py-8">
+                                <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                <p class="mt-2 text-sm">Tidak ada data potensi area.</p>
+                            </div>
+                        </td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -99,136 +194,312 @@
         </div>
     </div>
 </div>
+
+<!-- Image Modal -->
+<div id="imageModal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 transition-opacity" aria-hidden="true">
+            <div class="absolute inset-0 bg-gray-500 opacity-75" onclick="closeImageModal()"></div>
+        </div>
+        <div class="inline-block align-bottom bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full">
+            <div class="bg-white p-4">
+                <div class="flex justify-between items-start mb-4">
+                    <h3 class="text-lg font-medium text-gray-900" id="modalImageTitle">Foto Potensi Area</h3>
+                    <button onclick="closeImageModal()" class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div id="modalImageContent" class="flex justify-center">
+                    <!-- Image will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
+@push('styles')
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+    #map {
+        width: 100%;
+        height: 100%;
+        min-height: 400px;
+        border-radius: 8px;
+    }
+    
+    .leaflet-popup-content {
+        margin: 8px 12px;
+        line-height: 1.4;
+    }
+    
+    .leaflet-popup-content h3 {
+        margin: 0 0 8px 0;
+        color: #1d4ed8;
+        font-weight: bold;
+    }
+    
+    .leaflet-popup-content p {
+        margin: 4px 0;
+        font-size: 13px;
+    }
+    
+    .leaflet-popup-content img {
+        width: 100%;
+        max-width: 200px;
+        max-height: 150px;
+        object-fit: cover;
+        border-radius: 4px;
+        margin-top: 8px;
+    }
+</style>
+@endpush
+
 @push('scripts')
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 <script>
     let map;
     let markers = [];
-    let infoWindows = [];
     let polygons = [];
+    let allData = [];
+
+    // Custom icons for different categories
+    const categoryIcons = {
+        wisata: L.divIcon({
+            className: 'custom-div-icon',
+            html: '<div style="background-color: #3b82f6; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>',
+            iconSize: [16, 16],
+            iconAnchor: [8, 8]
+        }),
+        pertanian: L.divIcon({
+            className: 'custom-div-icon',
+            html: '<div style="background-color: #10b981; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>',
+            iconSize: [16, 16],
+            iconAnchor: [8, 8]
+        }),
+        peternakan: L.divIcon({
+            className: 'custom-div-icon',
+            html: '<div style="background-color: #f59e0b; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>',
+            iconSize: [16, 16],
+            iconAnchor: [8, 8]
+        }),
+        kuliner: L.divIcon({
+            className: 'custom-div-icon',
+            html: '<div style="background-color: #8b5cf6; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>',
+            iconSize: [16, 16],
+            iconAnchor: [8, 8]
+        }),
+        default: L.divIcon({
+            className: 'custom-div-icon',
+            html: '<div style="background-color: #6b7280; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>',
+            iconSize: [16, 16],
+            iconAnchor: [8, 8]
+        })
+    };
+
+    // Category colors for polygons
+    const categoryColors = {
+        wisata: '#3b82f6',
+        pertanian: '#10b981',
+        peternakan: '#f59e0b',
+        kuliner: '#8b5cf6',
+        default: '#6b7280'
+    };
 
     function initMap() {
-        // Default location (Indonesia)
-        const defaultLocation = { lat: -2.5489, lng: 118.0149 };
-        
-        // Initialize map
-        map = new google.maps.Map(document.getElementById('map'), {
-            center: defaultLocation,
-            zoom: 5,
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-            mapTypeControl: true,
-            mapTypeControlOptions: {
-                style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-                position: google.maps.ControlPosition.TOP_RIGHT
-            },
-            fullscreenControl: true,
-            streetViewControl: true,
-            zoomControl: true
-        });
+        // Initialize map centered on Indonesia
+        map = L.map('map').setView([-2.5489, 118.0149], 5);
 
-        // Add markers and polygons for each area
+        // Add OpenStreetMap tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 19
+        }).addTo(map);
+
+        // Add data from database
         @foreach($potensiAreas as $area)
             @if($area->latitude && $area->longitude)
-                // Create marker
-                const marker_{{ $area->id }} = new google.maps.Marker({
-                    position: { 
-                        lat: parseFloat("{{ $area->latitude }}"), 
-                        lng: parseFloat("{{ $area->longitude }}") 
-                    },
-                    map: map,
-                    title: "{{ $area->nama }}",
-                    animation: google.maps.Animation.DROP,
-                    icon: {
-                        url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
-                    }
+                addAreaToMap({
+                    id: {{ $area->id }},
+                    nama: "{{ addslashes($area->nama) }}",
+                    kategori: "{{ $area->kategori }}",
+                    deskripsi: "{{ addslashes($area->deskripsi) }}",
+                    latitude: {{ $area->latitude }},
+                    longitude: {{ $area->longitude }},
+                    foto: "{{ $area->foto ? asset('storage/' . $area->foto) : '' }}",
+                    is_approved: {{ $area->is_approved ?? 'null' }},
+                    polygon: @if($area->polygon) {!! $area->polygon !!} @else null @endif,
+                    created_at: "{{ $area->created_at ? $area->created_at->format('d/m/Y') : '' }}"
                 });
-                markers.push(marker_{{ $area->id }});
-
-                // Create info window with area details
-                const contentString_{{ $area->id }} = `
-                    <div class="info-window" style="width: 250px; padding: 10px;">
-                        <h3 style="margin-top: 0; color: #1d4ed8; font-weight: bold;">{{ $area->nama }}</h3>
-                        <p><strong>Kategori:</strong> {{ $area->kategori }}</p>
-                        <p><strong>Deskripsi:</strong> {{ $area->deskripsi }}</p>
-                        <p><strong>Koordinat:</strong> {{ $area->latitude }}, {{ $area->longitude }}</p>
-                        @if($area->foto)
-                            <img src="{{ asset('storage/' . $area->foto) }}" alt="Foto {{ $area->nama }}" style="width: 100%; max-height: 150px; object-fit: cover; border-radius: 4px; margin-top: 8px;">
-                        @endif
-                    </div>
-                `;
-
-                const infoWindow_{{ $area->id }} = new google.maps.InfoWindow({
-                    content: contentString_{{ $area->id }}
-                });
-                infoWindows.push(infoWindow_{{ $area->id }});
-
-                // Add click event to marker
-                marker_{{ $area->id }}.addListener("click", () => {
-                    // Close all open info windows
-                    infoWindows.forEach(iw => iw.close());
-                    
-                    // Open this info window
-                    infoWindow_{{ $area->id }}.open(map, marker_{{ $area->id }});
-                    
-                    // Center map on marker
-                    map.setCenter(marker_{{ $area->id }}.getPosition());
-                    map.setZoom(14);
-                });
-
-                // Handle polygon data if exists
-                @if($area->polygon)
-                    try {
-                        // Parse polygon data safely
-                        const polygonData_{{ $area->id }} = {!! $area->polygon !!};
-                        
-                        // Create polygon path
-                        const polygonPath_{{ $area->id }} = polygonData_{{ $area->id }}.map(coord => {
-                            return { lat: parseFloat(coord.lat), lng: parseFloat(coord.lng) };
-                        });
-                        
-                        // Create polygon
-                        const polygon_{{ $area->id }} = new google.maps.Polygon({
-                            paths: polygonPath_{{ $area->id }},
-                            strokeColor: "#FF0000",
-                            strokeOpacity: 0.8,
-                            strokeWeight: 2,
-                            fillColor: "#FF0000",
-                            fillOpacity: 0.35,
-                            map: map
-                        });
-                        
-                        polygons.push(polygon_{{ $area->id }});
-                        
-                        // Add click event to polygon
-                        polygon_{{ $area->id }}.addListener("click", () => {
-                            // Close all open info windows
-                            infoWindows.forEach(iw => iw.close());
-                            
-                            // Open this info window
-                            infoWindow_{{ $area->id }}.open(map, marker_{{ $area->id }});
-                        });
-                    } catch (e) {
-                        console.error("Error parsing polygon data for area {{ $area->id }}:", e);
-                    }
-                @endif
             @endif
         @endforeach
 
-        // Adjust map to show all markers if we have any
+        // Fit map to show all markers if we have any
         if (markers.length > 0) {
-            const bounds = new google.maps.LatLngBounds();
-            markers.forEach(marker => {
-                bounds.extend(marker.getPosition());
-            });
-            map.fitBounds(bounds);
-            
-            // Don't zoom in too far
-            if (map.getZoom() > 15) {
-                map.setZoom(15);
+            const group = new L.featureGroup(markers);
+            map.fitBounds(group.getBounds().pad(0.1));
+        }
+    }
+
+    function addAreaToMap(area) {
+        allData.push(area);
+        
+        // Determine icon based on category
+        let icon = categoryIcons.default;
+        let color = categoryColors.default;
+        
+        Object.keys(categoryIcons).forEach(cat => {
+            if (area.kategori.toLowerCase().includes(cat)) {
+                icon = categoryIcons[cat];
+                color = categoryColors[cat];
+            }
+        });
+
+        // Create marker
+        const marker = L.marker([area.latitude, area.longitude], { icon: icon })
+            .addTo(map);
+
+        // Create popup content
+        const statusBadge = area.is_approved === null ? 
+            '<span style="background: #fef3c7; color: #92400e; padding: 2px 8px; border-radius: 12px; font-size: 11px;">Menunggu Verifikasi</span>' :
+            area.is_approved ? 
+            '<span style="background: #d1fae5; color: #065f46; padding: 2px 8px; border-radius: 12px; font-size: 11px;">Disetujui</span>' :
+            '<span style="background: #fee2e2; color: #991b1b; padding: 2px 8px; border-radius: 12px; font-size: 11px;">Ditolak</span>';
+
+        const popupContent = `
+            <div style="min-width: 200px;">
+                <h3>${area.nama}</h3>
+                <p><strong>Kategori:</strong> ${area.kategori}</p>
+                <p><strong>Status:</strong> ${statusBadge}</p>
+                <p><strong>Deskripsi:</strong> ${area.deskripsi}</p>
+                <p><strong>Koordinat:</strong> ${area.latitude.toFixed(6)}, ${area.longitude.toFixed(6)}</p>
+                <p><strong>Tanggal:</strong> ${area.created_at}</p>
+                ${area.foto ? `<img src="${area.foto}" alt="Foto ${area.nama}" />` : ''}
+            </div>
+        `;
+
+        marker.bindPopup(popupContent);
+        marker.areaData = area;
+        markers.push(marker);
+
+        // Add polygon if exists
+        if (area.polygon && Array.isArray(area.polygon)) {
+            try {
+                const polygonCoords = area.polygon.map(coord => [parseFloat(coord.lat), parseFloat(coord.lng)]);
+                
+                const polygon = L.polygon(polygonCoords, {
+                    color: color,
+                    weight: 2,
+                    opacity: 0.8,
+                    fillColor: color,
+                    fillOpacity: 0.35
+                }).addTo(map);
+
+                polygon.bindPopup(popupContent);
+                polygon.areaData = area;
+                polygons.push(polygon);
+            } catch (e) {
+                console.error('Error creating polygon for area:', area.id, e);
             }
         }
     }
+
+    function focusOnMap(lat, lng, name) {
+        map.setView([lat, lng], 16);
+        
+        // Find and open popup for this marker
+        markers.forEach(marker => {
+            if (marker.areaData && marker.areaData.latitude === lat && marker.areaData.longitude === lng) {
+                marker.openPopup();
+            }
+        });
+    }
+
+    function filterByCategory(kategori) {
+        markers.forEach(marker => {
+            if (!kategori || marker.areaData.kategori.toLowerCase().includes(kategori.toLowerCase())) {
+                marker.addTo(map);
+            } else {
+                map.removeLayer(marker);
+            }
+        });
+
+        polygons.forEach(polygon => {
+            if (!kategori || polygon.areaData.kategori.toLowerCase().includes(kategori.toLowerCase())) {
+                polygon.addTo(map);
+            } else {
+                map.removeLayer(polygon);
+            }
+        });
+    }
+
+    function showAll() {
+        markers.forEach(marker => marker.addTo(map));
+        polygons.forEach(polygon => polygon.addTo(map));
+        
+        if (markers.length > 0) {
+            const group = new L.featureGroup(markers);
+            map.fitBounds(group.getBounds().pad(0.1));
+        }
+    }
+
+    function togglePolygons() {
+        polygons.forEach(polygon => {
+            if (map.hasLayer(polygon)) {
+                map.removeLayer(polygon);
+            } else {
+                polygon.addTo(map);
+            }
+        });
+    }
+
+    function showImageModal(imageSrc, title) {
+        const modal = document.getElementById('imageModal');
+        const modalContent = document.getElementById('modalImageContent');
+        const modalTitle = document.getElementById('modalImageTitle');
+        
+        modalTitle.textContent = `Foto ${title}`;
+        modalContent.innerHTML = `<img src="${imageSrc}" alt="Foto ${title}" class="max-w-full max-h-96 h-auto rounded-lg shadow-lg">`;
+        modal.classList.remove('hidden');
+    }
+
+    function closeImageModal() {
+        document.getElementById('imageModal').classList.add('hidden');
+    }
+
+    // Event listeners
+    document.addEventListener('DOMContentLoaded', function() {
+        initMap();
+
+        // Category filter
+        document.getElementById('kategoriFilter').addEventListener('change', function() {
+            filterByCategory(this.value);
+        });
+
+        // Show all button
+        document.getElementById('showAllBtn').addEventListener('click', showAll);
+
+        // Toggle polygons button
+        document.getElementById('togglePolygons').addEventListener('click', togglePolygons);
+
+        // Close modal when clicking outside
+        document.getElementById('imageModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeImageModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeImageModal();
+            }
+        });
+    });
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZDmvgsLscfcgz3faTixl54JobWg0xGAY&callback=initMap" async defer></script>
 @endpush

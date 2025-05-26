@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\KategoriController;
 use App\Http\Controllers\PotensiAreaController;
 use App\Http\Controllers\Pengurus\PengurusController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\VerifikasiPotensiController;
 
 
 /*
@@ -53,8 +54,8 @@ Route::get('/category/{category}', [PotensiDesaController::class, 'byCategory'])
     ->name('category.show');
 
 // Admin routes group with auth and role middleware
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
-    Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
     
     // Individual kategori routes instead of resource
     Route::get('/kategori', [KategoriController::class, 'index'])->name('kategori.index');
@@ -63,11 +64,33 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/kategori/{id}/edit', [KategoriController::class, 'edit'])->name('kategori.edit');
     Route::put('/kategori/{id}', [KategoriController::class, 'update'])->name('kategori.update');
     Route::delete('/kategori/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
+    Route::get('/verifikasi-potensi', [App\Http\Controllers\Admin\VerifikasiPotensiController::class, 'index'])->name('verifikasi-potensi');
+    Route::get('/potensi-desa/{id}/detail', [App\Http\Controllers\Admin\VerifikasiPotensiController::class, 'show'])
+        ->name('potensi-desa.detail');
+    Route::patch('/potensi-desa/{id}/reject', [App\Http\Controllers\Admin\VerifikasiPotensiController::class, 'reject'])
+        ->name('potensi-desa.reject');
+
+    // Routes untuk verifikasi potensi area
+    Route::controller(VerifikasiPotensiController::class)->prefix('potensi-area')->name('potensi-area.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/filter', 'filter')->name('filter');
+        Route::get('/pending-count', 'getPendingCount')->name('pending-count');
+        Route::get('/{id}', 'show')->name('show');
+        Route::patch('/{id}/approve', 'approve')->name('approve');
+        Route::patch('/{id}/reject', 'reject')->name('reject');
+        Route::post('/bulk-approve', 'bulkApprove')->name('bulk-approve');
+    });
+    Route::patch('/admin/potensi-area/{id}/approve', [VerifikasiPotensiController::class, 'approve'])->name('admin.potensi-area.approve');
+    Route::patch('/admin/potensi-area/{id}/reject', [VerifikasiPotensiController::class, 'reject'])->name('admin.potensi-area.reject');
+
 });
 
 // Pengurus routes group with auth and role middleware
 Route::middleware(['auth', 'role:pengurus'])->prefix('pengurus')->group(function () {
-    Route::get('/dashboard', [PengurusController::class, 'index'])->name('pengurus.dashboard');
+    Route::get('/dashboard', [PengurusController::class, 'index'])->name('dashboard');
+    Route::post('/potensi-area/{id}/approve', [PotensiAreaController::class, 'approve'])->name('potensi-area.approve');
+    Route::post('/potensi-desa/{id}/approve', [PotensiDesaController::class, 'approve'])->name('potensi-desa.approve');
+    Route::get('/pengurus/potensi/approval', [PengurusController::class, 'approvalIndex'])->name('potensi.approval');
 });
 
 Route::resource('potensi-area', PotensiAreaController::class);
