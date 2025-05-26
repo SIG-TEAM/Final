@@ -61,6 +61,7 @@ class PengurusController extends Controller
         // Menambahkan chart ke data array
         $data['potensiDesaChart'] = $potensiDesaChart;
         $data['potensiAreaChart'] = $potensiAreaChart;
+        $data['potensiAreas'] = \App\Models\PotensiArea::all();
         
         return view('pengurus.index', $data);
         
