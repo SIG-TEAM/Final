@@ -8,6 +8,7 @@ use App\Http\Controllers\PotensiAreaController;
 use App\Http\Controllers\Pengurus\PengurusController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\VerifikasiPotensiController;
+use App\Http\Controllers\Pengurus\PengurusDashboardController;
 
 
 /*
@@ -99,5 +100,7 @@ Route::post('/potensi-area', [PotensiAreaController::class, 'store'])->name('pot
 
 Route::post('/profile/request-role-change', [ProfileController::class, 'requestRoleChange'])->name('profile.requestRoleChange');
 Route::post('/admin/approve-role-change/{userId}', [ProfileController::class, 'approveRoleChange'])->name('profile.approveRoleChange');
+
+Route::get('/pengurus/dashboard', [PengurusController::class, 'index'])->name('pengurus.dashboard');
 
 require __DIR__.'/auth.php';
