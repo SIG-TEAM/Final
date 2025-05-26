@@ -139,15 +139,15 @@
                             <div>Lng: {{ number_format($area->longitude, 6) }}</div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            @if($area->is_approved === null)
+                            @if($area->status === 'pending')
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
                                     Menunggu Verifikasi
                                 </span>
-                            @elseif($area->is_approved == 1)
+                            @elseif($area->status === 'approved')
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                                     Disetujui
                                 </span>
-                            @else
+                            @elseif($area->status === 'rejected')
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
                                     Ditolak
                                 </span>
@@ -155,9 +155,9 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             @if($area->foto && $area->foto !== 'null')
-                                <img src="{{ asset('storage/' . $area->foto) }}" alt="Foto {{ $area->nama }}" 
+                                <img src="{{ asset('storage/' . $area->foto) }}" alt="Foto {{ e($area->nama) }}"
                                      class="h-12 w-12 object-cover rounded-md cursor-pointer hover:opacity-75"
-                                     onclick="showImageModal('{{ asset('storage/' . $area->foto) }}', '{{ $area->nama }}')">
+                                     onclick="showImageModal('{{ asset('storage/' . $area->foto) }}', '{{ e($area->nama) }}')">
                             @else
                                 <span class="text-gray-400 text-sm">Tidak ada foto</span>
                             @endif
@@ -167,12 +167,12 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div class="flex space-x-2">
-                                <button onclick="focusOnMap({{ $area->latitude }}, {{ $area->longitude }}, '{{ $area->nama }}')" 
+                                <button onclick="focusOnMap({{ $area->latitude }}, {{ $area->longitude }}, '{{ e($area->nama) }}')"
                                         class="text-blue-600 hover:text-blue-900 text-sm">
                                     Lihat di Peta
                                 </button>
                                 @if(auth()->user() && auth()->user()->role === 'pengurus')
-                                    @if($area->is_approved === null)
+                                    @if($area->status === 'pending')
                                         <form action="{{ route('potensi-area.approve', $area->id) }}" method="POST" class="inline">
                                             @csrf
                                             <button type="submit" class="text-green-600 hover:text-green-900 text-sm">
@@ -346,9 +346,9 @@
         const marker = L.marker([area.latitude, area.longitude], { icon: icon }).addTo(map);
 
         // Popup
-        const statusBadge = area.is_approved === null ? 
+        const statusBadge = area.status === 'pending' ? 
             '<span style="background: #fef3c7; color: #92400e; padding: 2px 8px; border-radius: 12px; font-size: 11px;">Menunggu Verifikasi</span>' :
-            area.is_approved ? 
+            area.status === 'approved' ? 
             '<span style="background: #d1fae5; color: #065f46; padding: 2px 8px; border-radius: 12px; font-size: 11px;">Disetujui</span>' :
             '<span style="background: #fee2e2; color: #991b1b; padding: 2px 8px; border-radius: 12px; font-size: 11px;">Ditolak</span>';
 
@@ -360,7 +360,7 @@
                 <p><strong>Deskripsi:</strong> ${area.deskripsi}</p>
                 <p><strong>Koordinat:</strong> ${area.latitude.toFixed(6)}, ${area.longitude.toFixed(6)}</p>
                 <p><strong>Tanggal:</strong> ${area.created_at}</p>
-                ${area.foto ? `<img src="${area.foto}" alt="Foto ${area.nama}" style="max-width:150px;max-height:100px;"/>` : ''}
+                ${area.foto ? `<img src='${area.foto.startsWith('http') ? area.foto : '{{ asset('storage') }}/' + area.foto}' alt='Foto ${area.nama.replace(/'/g, '&apos;')}' style='max-width:150px;max-height:100px;'/>` : ''}
             </div>
         `;
         marker.bindPopup(popupContent);
@@ -409,8 +409,8 @@
                     deskripsi: area.deskripsi,
                     latitude: parseFloat(area.latitude),
                     longitude: parseFloat(area.longitude),
-                    foto: area.foto ? ("{{ asset('storage') }}/" + area.foto) : '',
-                    is_approved: area.is_approved,
+                    foto: area.foto ? (area.foto.startsWith('http') ? area.foto : "{{ asset('storage') }}/" + area.foto) : '',
+                    status: area.status,
                     polygon: safeParsePolygon(area.polygon),
                     created_at: area.created_at ? area.created_at : ''
                 });

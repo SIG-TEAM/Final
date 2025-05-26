@@ -13,8 +13,10 @@ class VerifikasiPotensiController extends Controller
      */
     public function index()
     {
-        $potensiDesa = \App\Models\PotensiArea::where('status', 'pending')->get();
-        return view('admin.verifikasi-potensi.index', compact('potensiDesa'));
+        $pending = \App\Models\PotensiArea::where('status', 'pending')->get();
+        $approved = \App\Models\PotensiArea::where('status', 'approved')->get();
+        $rejected = \App\Models\PotensiArea::where('status', 'rejected')->get();
+        return view('admin.verifikasi-potensi.index', compact('pending', 'approved', 'rejected'));
     }
 
     /**
@@ -32,9 +34,8 @@ class VerifikasiPotensiController extends Controller
     public function approve($id)
     {
         $potensi = \App\Models\PotensiArea::findOrFail($id);
-        $potensi->is_approved = 1;
+        $potensi->status = 'approved';
         $potensi->save();
-
         return redirect()->back()->with('success', 'Potensi area berhasil disetujui.');
     }
 
@@ -44,10 +45,8 @@ class VerifikasiPotensiController extends Controller
     public function reject(Request $request, $id)
     {
         $potensi = \App\Models\PotensiArea::findOrFail($id);
-        $potensi->is_approved = 0;
-        $potensi->alasan = $request->alasan;
+        $potensi->status = 'rejected';
         $potensi->save();
-
         return redirect()->back()->with('success', 'Potensi area berhasil ditolak.');
     }
 

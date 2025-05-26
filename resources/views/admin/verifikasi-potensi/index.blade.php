@@ -24,59 +24,32 @@
             </div>
         @endif
 
-        <!-- Data table -->
-        <div class="bg-white overflow-hidden shadow-sm rounded-lg">
+        <!-- Tabel Pending -->
+        <h2 class="text-lg font-bold mt-8 mb-2">Menunggu Verifikasi</h2>
+        <div class="bg-white overflow-hidden shadow-sm rounded-lg mb-8">
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                ID
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Nama
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Kategori
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Deskripsi
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Lokasi
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Status
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Foto
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Tanggal
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Aksi
-                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kategori</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Deskripsi</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lokasi</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Foto</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        @forelse($potensiDesa as $item)
+                        @forelse($pending as $item)
                             <tr>
-                                <td class="px-6 py-4">
-                                    {{ $item->id }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    {{ $item->nama }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    {{ $item->kategori }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    {{ $item->deskripsi }}
-                                </td>
-                                <td class="px-6 py-4">
-                                    {{ $item->latitude }}, {{ $item->longitude }}
-                                </td>
+                                <td class="px-6 py-4">{{ $item->id }}</td>
+                                <td class="px-6 py-4">{{ $item->nama }}</td>
+                                <td class="px-6 py-4">{{ $item->kategori }}</td>
+                                <td class="px-6 py-4">{{ $item->deskripsi }}</td>
+                                <td class="px-6 py-4">{{ $item->latitude }}, {{ $item->longitude }}</td>
                                 <td class="px-6 py-4">
                                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
                                         Menunggu Verifikasi
@@ -89,23 +62,17 @@
                                         <span class="text-gray-400 text-sm">Tidak ada foto</span>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4">
-                                    {{ $item->created_at ? $item->created_at->format('d/m/Y H:i') : '-' }}
-                                </td>
+                                <td class="px-6 py-4">{{ $item->created_at ? $item->created_at->format('d/m/Y H:i') : '-' }}</td>
                                 <td class="px-6 py-4 text-right">
                                     <form action="{{ route('admin.potensi-area.approve', $item->id) }}" method="POST" class="inline">
                                         @csrf
                                         @method('PATCH')
-                                        <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1.5 rounded-md text-sm">
-                                            Setujui
-                                        </button>
+                                        <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1.5 rounded-md text-sm">Setujui</button>
                                     </form>
                                     <form action="{{ route('admin.potensi-area.reject', $item->id) }}" method="POST" class="inline ml-2">
                                         @csrf
                                         @method('PATCH')
-                                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-md text-sm">
-                                            Tolak
-                                        </button>
+                                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-md text-sm">Tolak</button>
                                     </form>
                                 </td>
                             </tr>
@@ -116,7 +83,7 @@
                                         <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                         </svg>
-                                        <p class="mt-2 text-sm">Tidak ada data untuk diverifikasi.</p>
+                                        <p class="mt-2 text-sm">Tidak ada data pending.</p>
                                     </div>
                                 </td>
                             </tr>
@@ -124,12 +91,81 @@
                     </tbody>
                 </table>
             </div>
-            
-            @if(isset($potensiDesa) && method_exists($potensiDesa, 'hasPages') && $potensiDesa->hasPages())
-                <div class="px-4 py-3 bg-white border-t border-gray-200 sm:px-6">
-                    {{ $potensiDesa->links() }}
-                </div>
-            @endif
+        </div>
+
+        <!-- Tabel Sudah Diverifikasi (Disetujui/Ditolak) -->
+        <h2 class="text-lg font-bold mt-8 mb-2">Sudah Diverifikasi</h2>
+        <div class="bg-white overflow-hidden shadow-sm rounded-lg">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kategori</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Deskripsi</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lokasi</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Foto</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        @foreach($approved as $item)
+                            <tr>
+                                <td class="px-6 py-4">{{ $item->id }}</td>
+                                <td class="px-6 py-4">{{ $item->nama }}</td>
+                                <td class="px-6 py-4">{{ $item->kategori }}</td>
+                                <td class="px-6 py-4">{{ $item->deskripsi }}</td>
+                                <td class="px-6 py-4">{{ $item->latitude }}, {{ $item->longitude }}</td>
+                                <td class="px-6 py-4">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Disetujui</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    @if($item->foto)
+                                        <img src="{{ asset('storage/' . $item->foto) }}" alt="Foto" class="w-16 h-16 object-cover rounded">
+                                    @else
+                                        <span class="text-gray-400 text-sm">Tidak ada foto</span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4">{{ $item->created_at ? $item->created_at->format('d/m/Y H:i') : '-' }}</td>
+                            </tr>
+                        @endforeach
+                        @foreach($rejected as $item)
+                            <tr>
+                                <td class="px-6 py-4">{{ $item->id }}</td>
+                                <td class="px-6 py-4">{{ $item->nama }}</td>
+                                <td class="px-6 py-4">{{ $item->kategori }}</td>
+                                <td class="px-6 py-4">{{ $item->deskripsi }}</td>
+                                <td class="px-6 py-4">{{ $item->latitude }}, {{ $item->longitude }}</td>
+                                <td class="px-6 py-4">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Ditolak</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    @if($item->foto)
+                                        <img src="{{ asset('storage/' . $item->foto) }}" alt="Foto" class="w-16 h-16 object-cover rounded">
+                                    @else
+                                        <span class="text-gray-400 text-sm">Tidak ada foto</span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4">{{ $item->created_at ? $item->created_at->format('d/m/Y H:i') : '-' }}</td>
+                            </tr>
+                        @endforeach
+                        @if($approved->isEmpty() && $rejected->isEmpty())
+                            <tr>
+                                <td colspan="9" class="px-6 py-4 text-center text-gray-500">
+                                    <div class="flex flex-col items-center justify-center py-8">
+                                        <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                        </svg>
+                                        <p class="mt-2 text-sm">Tidak ada data disetujui atau ditolak.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endif
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
