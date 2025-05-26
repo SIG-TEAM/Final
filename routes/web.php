@@ -88,7 +88,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
 // Pengurus routes group with auth and role middleware
 Route::middleware(['auth', 'role:pengurus'])->prefix('pengurus')->group(function () {
-    Route::get('/dashboard', [PengurusController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [PengurusController::class, 'index'])->name('pengurus.dashboard');
     Route::post('/potensi-area/{id}/approve', [PotensiAreaController::class, 'approve'])->name('potensi-area.approve');
     Route::post('/potensi-desa/{id}/approve', [PotensiDesaController::class, 'approve'])->name('potensi-desa.approve');
     Route::get('/pengurus/potensi/approval', [PengurusController::class, 'approvalIndex'])->name('potensi.approval');
@@ -100,7 +100,5 @@ Route::post('/potensi-area', [PotensiAreaController::class, 'store'])->name('pot
 
 Route::post('/profile/request-role-change', [ProfileController::class, 'requestRoleChange'])->name('profile.requestRoleChange');
 Route::post('/admin/approve-role-change/{userId}', [ProfileController::class, 'approveRoleChange'])->name('profile.approveRoleChange');
-
-Route::get('/pengurus/dashboard', [PengurusController::class, 'index'])->name('pengurus.dashboard');
 
 require __DIR__.'/auth.php';
