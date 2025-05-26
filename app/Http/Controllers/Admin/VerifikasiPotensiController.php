@@ -32,7 +32,7 @@ class VerifikasiPotensiController extends Controller
      */
     public function approve($id)
     {
-        $potensi = PotensiArea::findOrFail($id);
+        $potensi = \App\Models\PotensiArea::findOrFail($id);
         $potensi->is_approved = 1;
         $potensi->save();
 
@@ -44,12 +44,12 @@ class VerifikasiPotensiController extends Controller
      */
     public function reject(Request $request, $id)
     {
-        $potensi = PotensiArea::findOrFail($id);
-        $potensi->is_approved = null; // Ubah ke null
+        $potensi = \App\Models\PotensiArea::findOrFail($id);
+        $potensi->is_approved = 0;
         $potensi->alasan = $request->alasan;
         $potensi->save();
 
-        return redirect()->back()->with('success', 'Potensi area dikembalikan ke status pending.');
+        return redirect()->back()->with('success', 'Potensi area berhasil ditolak.');
     }
 
     /**

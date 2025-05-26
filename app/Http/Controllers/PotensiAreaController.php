@@ -23,29 +23,23 @@ class PotensiAreaController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nama' => 'required|string|max:255',
-            'kategori' => 'required|string',
-            'deskripsi' => 'nullable|string',
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
-            'polygon' => 'nullable|json', // Validasi untuk polygon
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validasi untuk file foto
-            'titik_potensi' => 'nullable|json',
+            'nama' => 'required',
+            'kategori' => 'required',
+            'deskripsi' => 'nullable',
+            'foto' => 'nullable|image|max:2048',
+            'polygon' => 'nullable',
+            'titik_potensi' => 'nullable',
+            'latitude' => 'required',
+            'longitude' => 'required',
         ]);
 
-        // Validasi tambahan: pastikan polygon atau titik_potensi tidak keduanya kosong
-        if (empty($validated['polygon']) && empty($validated['titik_potensi'])) {
-            return back()->withErrors(['polygon' => 'Polygon atau Titik Potensi harus diisi.'])->withInput();
-        }
-
+        // Handle upload foto
         if ($request->hasFile('foto')) {
-            $fotoPath = $request->file('foto')->store('potensi-area-foto', 'public');
-            $validated['foto'] = $fotoPath;
+            $validated['foto'] = $request->file('foto')->store('potensi-area-foto', 'public');
         }
 
-        // Jangan tambahkan $validated['is_approved'] di sini
-
-        PotensiArea::create($validated);
+        // Jangan isi is_approved, biarkan NULL
+        \App\Models\PotensiArea::create($validated);
 
         return redirect()->route('potensi-area.index')->with('success', 'Potensi area berhasil ditambahkan.');
     }
