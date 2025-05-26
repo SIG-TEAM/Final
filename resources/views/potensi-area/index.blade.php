@@ -40,63 +40,6 @@
         </div>
     </div>
 
-    <!-- Map Controls -->
-    <div class="bg-white rounded-lg shadow-md p-4 mb-4">
-        <div class="flex flex-wrap gap-2 items-center">
-            <label class="text-sm font-medium text-gray-700">Filter Kategori:</label>
-            <select id="kategoriFilter" class="border border-gray-300 rounded px-3 py-1 text-sm">
-                <option value="">Semua Kategori</option>
-                @foreach($potensiAreas->pluck('kategori')->unique() as $kategori)
-                    <option value="{{ $kategori }}">{{ ucfirst($kategori) }}</option>
-                @endforeach
-            </select>
-            
-            <button id="showAllBtn" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
-                Tampilkan Semua
-            </button>
-            
-            <button id="togglePolygons" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">
-                Toggle Polygon
-            </button>
-            
-            <div class="ml-auto flex gap-2">
-                <div class="flex items-center text-sm">
-                    <div class="w-3 h-3 bg-blue-500 rounded-full mr-1"></div>
-                    <span>Wisata</span>
-                </div>
-                <div class="flex items-center text-sm">
-                    <div class="w-3 h-3 bg-green-500 rounded-full mr-1"></div>
-                    <span>Pertanian</span>
-                </div>
-                <div class="flex items-center text-sm">
-                    <div class="w-3 h-3 bg-yellow-500 rounded-full mr-1"></div>
-                    <span>Peternakan</span>
-                </div>
-                <div class="flex items-center text-sm">
-                    <div class="w-3 h-3 bg-purple-500 rounded-full mr-1"></div>
-                    <span>Kuliner</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Map Section -->
-    <div class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
-        <div class="p-6 border-b border-gray-200">
-            <h2 class="text-xl font-semibold text-gray-800">Peta Potensi Area (OpenStreetMap)</h2>
-        </div>
-        <div class="relative" style="height: 500px;">
-            <div id="map" class="w-full h-full bg-gray-200" style="height: 500px; min-height: 400px;">
-                <div id="mapPlaceholder" class="flex items-center justify-center h-full text-gray-500">
-                    <div class="text-center">
-                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
-                        <p>Loading Map...</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Tabel Data -->
     <div class="bg-white rounded-lg shadow-md overflow-hidden">
         <div class="overflow-x-auto">
@@ -157,7 +100,7 @@
                             @if($area->foto && $area->foto !== 'null')
                                 <img src="{{ asset('storage/' . $area->foto) }}" alt="Foto {{ e($area->nama) }}"
                                      class="h-12 w-12 object-cover rounded-md cursor-pointer hover:opacity-75"
-                                     onclick="showImageModal('{{ asset('storage/' . $area->foto) }}', '{{ e($area->nama) }}')">
+                                     onclick="showImageModal('{{ asset('storage/' . $area->foto) }}', '{{ addslashes($area->nama) }}')">
                             @else
                                 <span class="text-gray-400 text-sm">Tidak ada foto</span>
                             @endif
@@ -167,7 +110,7 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div class="flex space-x-2">
-                                <button onclick="focusOnMap({{ $area->latitude }}, {{ $area->longitude }}, '{{ e($area->nama) }}')"
+                                <button onclick="focusOnMap({{ $area->latitude }}, {{ $area->longitude }}, '{{ addslashes($area->nama) }}')"
                                         class="text-blue-600 hover:text-blue-900 text-sm">
                                     Lihat di Peta
                                 </button>
@@ -274,8 +217,13 @@
     let map;
     let markers = [];
     let polygons = [];
-    // Kirim data dari PHP ke JS
     let allData = @json($potensiAreas);
+
+    allData = allData.map(area => ({
+        ...area,
+        foto: area.foto && area.foto !== 'null' ? `/storage/${area.foto}` : '',
+        created_at: area.created_at ? (new Date(area.created_at)).toLocaleDateString('id-ID') : '-',
+    }));
 
     // Custom icons for different categories
     const categoryIcons = {
@@ -360,7 +308,7 @@
                 <p><strong>Deskripsi:</strong> ${area.deskripsi}</p>
                 <p><strong>Koordinat:</strong> ${area.latitude.toFixed(6)}, ${area.longitude.toFixed(6)}</p>
                 <p><strong>Tanggal:</strong> ${area.created_at}</p>
-                ${area.foto ? `<img src='${area.foto.startsWith('http') ? area.foto : '{{ asset('storage') }}/' + area.foto}' alt='Foto ${area.nama.replace(/'/g, '&apos;')}' style='max-width:150px;max-height:100px;'/>` : ''}
+                ${area.foto ? `<img src='${area.foto}' alt='Foto ${area.nama.replace(/'/g, '&apos;')}' style='max-width:150px;max-height:100px;'/>` : ''}
             </div>
         `;
         marker.bindPopup(popupContent);
@@ -409,7 +357,7 @@
                     deskripsi: area.deskripsi,
                     latitude: parseFloat(area.latitude),
                     longitude: parseFloat(area.longitude),
-                    foto: area.foto ? (area.foto.startsWith('http') ? area.foto : "{{ asset('storage') }}/" + area.foto) : '',
+                    foto: area.foto && area.foto !== 'null' ? asset('storage/' + area.foto) : '',
                     status: area.status,
                     polygon: safeParsePolygon(area.polygon),
                     created_at: area.created_at ? area.created_at : ''
