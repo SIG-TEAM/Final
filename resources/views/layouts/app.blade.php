@@ -15,6 +15,7 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -30,7 +31,8 @@
                 width: 100%;
                 margin: 0;
                 padding: 0;
-                overflow: hidden;
+                /* Hapus atau ubah baris berikut agar scroll diizinkan */
+                /* overflow: hidden; */
             }
             #map {
                 height: 100dvh;
@@ -60,10 +62,11 @@
         @yield('head')
     </head>
     <body class="p-0 m-0 font-sans antialiased bg-gray-100" @yield('body_attributes')>
-        <div class="min-h-screen">
+        <div class="min-h-screen relative">
             <!-- Include navbar component -->
             <x-navbar />
-
+            <!-- Spacer for navbar height -->
+            <div class="h-[56px]"></div>
             <!-- Page Heading -->
             @if (isset($header))
                 <header class="bg-white shadow">
@@ -72,7 +75,6 @@
                     </div>
                 </header>
             @endif
-
             <!-- Page Content -->
             <main>
                 @yield('content')

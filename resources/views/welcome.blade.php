@@ -107,11 +107,11 @@ onload="initMap()"
 @endsection
 
 @section('content')
-<div class="relative w-screen h-[100dvh] overflow-hidden">
-    <div class="flex h-[100dvh] w-screen overflow-hidden">
-        <div id="map" class="flex-grow h-[100dvh] w-full"></div>
-        <div id="sidebar" class="w-0 bg-white transition-all duration-300 shadow-xl border-l border-gray-200">
-            <div id="sidebar-content" class="p-5">
+<div class="fixed inset-0 w-screen h-screen m-0 p-0 overflow-hidden">
+    <div class="flex h-full w-full overflow-hidden">
+        <div id="map" class="flex-grow h-full w-full"></div>
+        <div id="sidebar" class="w-0 bg-white transition-all duration-300 shadow-xl border-l border-gray-200 h-full">
+            <div id="sidebar-content" class="p-5 h-full overflow-y-auto">
                 <x-sidebar-default />
             </div>
         </div>
