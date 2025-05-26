@@ -10,8 +10,7 @@ class PotensiAreaController extends Controller
 {
     public function index()
     {
-        // Contoh: tampilkan semua data yang sudah di-approve
-        $potensiAreas = \App\Models\PotensiArea::where('is_approved', 1)->get();
+        $potensiAreas = \App\Models\PotensiArea::all(); // tanpa filter status
         return view('potensi-area.index', compact('potensiAreas'));
     }
 
