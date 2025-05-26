@@ -21,6 +21,7 @@ return new class extends Migration
             $table->json('polygon')->nullable(); // Simpan koordinat sebagai array JSON
             $table->string('foto')->nullable(); // Tambahkan kolom untuk menyimpan path foto
             $table->json('titik_potensi')->nullable();
+            $table->string('status')->default('pending');
             $table->timestamps();
         });
     }

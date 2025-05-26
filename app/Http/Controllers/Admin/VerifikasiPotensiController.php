@@ -13,8 +13,7 @@ class VerifikasiPotensiController extends Controller
      */
     public function index()
     {
-        // Ambil data yang belum diverifikasi
-        $potensiDesa = PotensiArea::whereNull('is_approved')->orderBy('created_at', 'desc')->paginate(10);
+        $potensiDesa = \App\Models\PotensiArea::where('status', 'pending')->get();
         return view('admin.verifikasi-potensi.index', compact('potensiDesa'));
     }
 

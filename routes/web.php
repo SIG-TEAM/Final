@@ -81,8 +81,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
         Route::patch('/{id}/reject', 'reject')->name('reject');
         Route::post('/bulk-approve', 'bulkApprove')->name('bulk-approve');
     });
-    Route::patch('/admin/potensi-area/{id}/approve', [VerifikasiPotensiController::class, 'approve'])->name('admin.potensi-area.approve');
-    Route::patch('/admin/potensi-area/{id}/reject', [VerifikasiPotensiController::class, 'reject'])->name('admin.potensi-area.reject');
+    Route::post('/admin/potensi-area/{id}/approve', [AdminController::class, 'approvePotensiArea'])->name('admin.potensi-area.approve');
+    Route::post('/admin/potensi-area/{id}/reject', [AdminController::class, 'rejectPotensiArea'])->name('admin.potensi-area.reject');
 
 });
 

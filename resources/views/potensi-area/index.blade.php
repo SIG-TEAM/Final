@@ -86,7 +86,14 @@
             <h2 class="text-xl font-semibold text-gray-800">Peta Potensi Area (OpenStreetMap)</h2>
         </div>
         <div class="relative" style="height: 500px;">
-            <div id="map" class="w-full h-full" style="height: 100%; min-height: 400px;"></div>
+            <div id="map" class="w-full h-full bg-gray-200" style="height: 500px; min-height: 400px;">
+                <div id="mapPlaceholder" class="flex items-center justify-center h-full text-gray-500">
+                    <div class="text-center">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
+                        <p>Loading Map...</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -260,13 +267,15 @@
 
 @push('scripts')
 <!-- Leaflet JS -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
 <script>
     let map;
     let markers = [];
     let polygons = [];
-    let allData = [];
+    // Kirim data dari PHP ke JS
+    let allData = @json($potensiAreas);
 
     // Custom icons for different categories
     const categoryIcons = {
@@ -302,7 +311,6 @@
         })
     };
 
-    // Category colors for polygons
     const categoryColors = {
         wisata: '#3b82f6',
         pertanian: '#10b981',
@@ -311,60 +319,33 @@
         default: '#6b7280'
     };
 
-    function initMap() {
-        // Initialize map centered on Indonesia
-        map = L.map('map').setView([-2.5489, 118.0149], 5);
-
-        // Add OpenStreetMap tile layer
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors',
-            maxZoom: 19
-        }).addTo(map);
-
-        // Add data from database
-        @foreach($potensiAreas as $area)
-            @if($area->latitude && $area->longitude)
-                addAreaToMap({
-                    id: {{ $area->id }},
-                    nama: "{{ addslashes($area->nama) }}",
-                    kategori: "{{ $area->kategori }}",
-                    deskripsi: "{{ addslashes($area->deskripsi) }}",
-                    latitude: {{ $area->latitude }},
-                    longitude: {{ $area->longitude }},
-                    foto: "{{ $area->foto ? asset('storage/' . $area->foto) : '' }}",
-                    is_approved: {{ $area->is_approved ?? 'null' }},
-                    polygon: @if($area->polygon) {!! $area->polygon !!} @else null @endif,
-                    created_at: "{{ $area->created_at ? $area->created_at->format('d/m/Y') : '' }}"
-                });
-            @endif
-        @endforeach
-
-        // Fit map to show all markers if we have any
-        if (markers.length > 0) {
-            const group = new L.featureGroup(markers);
-            map.fitBounds(group.getBounds().pad(0.1));
+    function safeParsePolygon(polygon) {
+        if (!polygon) return null;
+        try {
+            if (typeof polygon === 'string') {
+                return JSON.parse(polygon);
+            }
+            return polygon;
+        } catch (e) {
+            return null;
         }
     }
 
     function addAreaToMap(area) {
-        allData.push(area);
-        
-        // Determine icon based on category
+        // Tentukan icon & warna
         let icon = categoryIcons.default;
         let color = categoryColors.default;
-        
         Object.keys(categoryIcons).forEach(cat => {
-            if (area.kategori.toLowerCase().includes(cat)) {
+            if (cat !== 'default' && area.kategori && area.kategori.toLowerCase().includes(cat)) {
                 icon = categoryIcons[cat];
                 color = categoryColors[cat];
             }
         });
 
-        // Create marker
-        const marker = L.marker([area.latitude, area.longitude], { icon: icon })
-            .addTo(map);
+        // Marker
+        const marker = L.marker([area.latitude, area.longitude], { icon: icon }).addTo(map);
 
-        // Create popup content
+        // Popup
         const statusBadge = area.is_approved === null ? 
             '<span style="background: #fef3c7; color: #92400e; padding: 2px 8px; border-radius: 12px; font-size: 11px;">Menunggu Verifikasi</span>' :
             area.is_approved ? 
@@ -379,33 +360,67 @@
                 <p><strong>Deskripsi:</strong> ${area.deskripsi}</p>
                 <p><strong>Koordinat:</strong> ${area.latitude.toFixed(6)}, ${area.longitude.toFixed(6)}</p>
                 <p><strong>Tanggal:</strong> ${area.created_at}</p>
-                ${area.foto ? `<img src="${area.foto}" alt="Foto ${area.nama}" />` : ''}
+                ${area.foto ? `<img src="${area.foto}" alt="Foto ${area.nama}" style="max-width:150px;max-height:100px;"/>` : ''}
             </div>
         `;
-
         marker.bindPopup(popupContent);
         marker.areaData = area;
         markers.push(marker);
 
-        // Add polygon if exists
-        if (area.polygon && Array.isArray(area.polygon)) {
-            try {
-                const polygonCoords = area.polygon.map(coord => [parseFloat(coord.lat), parseFloat(coord.lng)]);
-                
-                const polygon = L.polygon(polygonCoords, {
-                    color: color,
-                    weight: 2,
-                    opacity: 0.8,
-                    fillColor: color,
-                    fillOpacity: 0.35
-                }).addTo(map);
-
-                polygon.bindPopup(popupContent);
-                polygon.areaData = area;
-                polygons.push(polygon);
-            } catch (e) {
-                console.error('Error creating polygon for area:', area.id, e);
+        // Polygon (jika ada)
+        if (area.polygon && Array.isArray(area.polygon) && area.polygon.length > 2) {
+            let coords = [];
+            if (typeof area.polygon[0] === 'object' && 'lat' in area.polygon[0] && 'lng' in area.polygon[0]) {
+                coords = area.polygon.map(p => [p.lat, p.lng]);
+            } else if (Array.isArray(area.polygon[0])) {
+                coords = area.polygon.map(p => [p[1], p[0]]);
             }
+            const polygon = L.polygon(coords, {
+                color: color,
+                weight: 2,
+                opacity: 0.8,
+                fillColor: color,
+                fillOpacity: 0.35
+            }).addTo(map);
+            polygon.bindPopup(popupContent);
+            polygon.areaData = area;
+            polygons.push(polygon);
+        }
+    }
+
+    function initMap() {
+        // Hide placeholder
+        const placeholder = document.getElementById('mapPlaceholder');
+        if (placeholder) placeholder.style.display = 'none';
+
+        map = L.map('map').setView([-2.5489, 118.0149], 5);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 19
+        }).addTo(map);
+
+        // Tambahkan marker/polygon jika ada data
+        allData.forEach(area => {
+            if (area.latitude && area.longitude) {
+                addAreaToMap({
+                    id: area.id,
+                    nama: area.nama,
+                    kategori: area.kategori,
+                    deskripsi: area.deskripsi,
+                    latitude: parseFloat(area.latitude),
+                    longitude: parseFloat(area.longitude),
+                    foto: area.foto ? ("{{ asset('storage') }}/" + area.foto) : '',
+                    is_approved: area.is_approved,
+                    polygon: safeParsePolygon(area.polygon),
+                    created_at: area.created_at ? area.created_at : ''
+                });
+            }
+        });
+
+        // Fit map jika ada marker
+        if (markers.length > 0) {
+            const group = new L.featureGroup(markers);
+            map.fitBounds(group.getBounds().pad(0.1));
         }
     }
 
@@ -474,7 +489,7 @@
 
     // Event listeners
     document.addEventListener('DOMContentLoaded', function() {
-        initMap();
+        setTimeout(initMap, 300);
 
         // Category filter
         document.getElementById('kategoriFilter').addEventListener('change', function() {
