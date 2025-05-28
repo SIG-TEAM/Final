@@ -51,13 +51,17 @@
             <!-- Chart for Potensi Desa by Category -->
             <div class="p-6 bg-white rounded-lg shadow">
                 <h3 class="mb-4 text-lg font-medium text-gray-800">Distribusi Titik Potensi</h3>
-                {!! $potensiDesaChart->container() !!}
+                <div class="overflow-x-auto" style="height:320px; min-height:220px; max-width:100%;">
+                    {!! $potensiDesaChart->container() !!}
+                </div>
             </div>
             
             <!-- Chart for Potensi Area by Category -->
             <div class="p-6 bg-white rounded-lg shadow">
                 <h3 class="mb-4 text-lg font-medium text-gray-800">Distribusi Area Potensi</h3>
-                {!! $potensiAreaChart->container() !!}
+                <div class="overflow-x-auto" style="height:320px; min-height:220px; max-width:100%;">
+                    {!! $potensiAreaChart->container() !!}
+                </div>
             </div>
         </div>
     </div>
@@ -65,17 +69,17 @@
     {{-- Catalog Potensi Area --}}
     <div class="p-12 m-10 bg-white shadow sm:rounded-lg">
         <h2 class="mb-6 text-xl font-semibold" style="color:#1B3B0D;">Catalog Potensi Area</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             @forelse($approvedPotensiAreas ?? [] as $area)
                 <div class="bg-[#FAFAF9] border border-[#E9ECEF] rounded-lg shadow hover:shadow-lg transition-shadow duration-200 p-6 flex flex-col">
                     <div class="mb-4">
-                        <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold"
+                        <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full"
                               style="background-color:#28A745; color:white;">
                             {{ $area->kategori ?? 'Tanpa Kategori' }}
                         </span>
                     </div>
-                    <h3 class="text-lg font-bold mb-2" style="color:#2D5016;">{{ $area->nama }}</h3>
-                    <p class="text-sm mb-2" style="color:#6C757D;">{{ $area->deskripsi }}</p>
+                    <h3 class="mb-2 text-lg font-bold" style="color:#2D5016;">{{ $area->nama }}</h3>
+                    <p class="mb-2 text-sm" style="color:#6C757D;">{{ $area->deskripsi }}</p>
                     <div class="flex flex-wrap gap-2 mt-auto">
                         <span class="inline-block px-2 py-1 rounded bg-[#F8F9FA] text-xs text-[#2C3E50] border border-[#E9ECEF]">
                             Luas: {{ $area->luas ?? '-' }} m²
@@ -91,7 +95,7 @@
                     </div>
                 </div>
             @empty
-                <div class="col-span-3 text-center text-gray-500 py-8">
+                <div class="col-span-3 py-8 text-center text-gray-500">
                     Tidak ada data potensi area.
                 </div>
             @endforelse

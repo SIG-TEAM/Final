@@ -31,8 +31,9 @@
                  x-transition:leave="transition-transform duration-300"
                  x-transition:leave-start="translate-x-0"
                  x-transition:leave-end="-translate-x-full"
-                 class="fixed left-0 z-30 flex-shrink-0 w-64 h-full text-white bg-gray-800 rounded-r-xl">
-                <div class="flex items-center justify-between p-4 text-lg font-bold border-b border-gray-700">
+                 class="fixed left-0 z-30 flex-shrink-0 w-64 h-full text-white bg-green-700 rounded-r-xl"
+                 style="top:64px;">
+                <div class="flex items-center justify-between p-4 text-lg font-bold text-white bg-green-700 border-b border-gray-200 rounded-tr-xl">
                     <span>Admin Panel</span>
                     <button @click="sidebarOpen = false" class="text-white">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -42,17 +43,17 @@
                 </div>
                 <nav class="mt-4">
                     <ul class="space-y-2">
-                        <li class="hover:bg-slate-500">
+                        <li class="hover:bg-green-800">
                             <a href="{{ route('admin.dashboard') }}" class="block py-2.5 px-4 rounded">
                                  Dashboard
                             </a>
                         </li>
-                        <li class="hover:bg-slate-500">
+                        <li class="hover:bg-green-800">
                             <a href="{{ route('admin.kategori.index') }}" class="block py-2.5 px-4 rounded">
                                 Kategori Potensi
                             </a>
                         </li>
-                        <li class="hover:bg-slate-500">
+                        <li class="hover:bg-green-800">
                             <a href="{{ route('admin.verifikasi-potensi') }}" class="block py-2.5 px-4 rounded">
                                 Verifikasi Potensi Desa
                             </a>
@@ -92,5 +93,6 @@
             </div>
         </div>
         
+        @yield('scripts')
     </body>
 </html>
