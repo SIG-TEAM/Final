@@ -21,7 +21,8 @@ class AdminController extends Controller
             'totalPengurus' => User::where('role', 'pengurus')->count(),
             'totalPenduduk' => User::where('role', 'penduduk')->count(),
             'totalPotensiDesa' => PotensiDesa::count(),
-            'totalPotensiArea' => PotensiArea::count(),
+            // Only count approved PotensiArea for totalPotensiArea
+            'totalPotensiArea' => PotensiArea::where('status', 'approved')->count(),
             'totalKategori' => Kategori::count(),
         ];
         
@@ -29,8 +30,9 @@ class AdminController extends Controller
         $potensiDesaByCategory = Kategori::withCount('potensi')
             ->orderBy('potensi_count', 'desc')
             ->get();
-            
+        
         $potensiAreaByCategory = PotensiArea::select('kategori', DB::raw('count(*) as total'))
+            ->where('status', 'approved')
             ->groupBy('kategori')
             ->orderBy('total', 'desc')
             ->get();
@@ -41,6 +43,7 @@ class AdminController extends Controller
         $potensiDesaChart = $chart->pieChart()
             ->setTitle('Distribusi Titik Potensi')
             ->setColors(['#4F46E5', '#7C3AED', '#EC4899', '#F59E0B', '#10B981'])
+            ->setHeight(320) // Set chart height in px
             ->setLabels($potensiDesaByCategory->pluck('nama')->toArray())
             ->setDataset([
                 [
@@ -48,18 +51,19 @@ class AdminController extends Controller
                     'data' => $potensiDesaByCategory->pluck('potensi_count')->toArray()
                 ]
             ]);
-            
+        
         $areaChart = new LarapexChart();
         $potensiAreaChart = $areaChart->barChart()
             ->setTitle('Distribusi Area Potensi')
             ->setColors(['#6366F1'])
+            ->setHeight(320) // Set chart height in px
             ->setLabels($potensiAreaByCategory->pluck('kategori')->toArray())
             ->setDataset([
                 [
                     'name' => 'Area Potensi',
                     'data' => $potensiAreaByCategory->pluck('total')->toArray()
                 ]
-            ]);
+                ]);
             
         // Add charts to data array
         $data['potensiDesaChart'] = $potensiDesaChart;
