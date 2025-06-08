@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('foto')->nullable(); // Tambahkan kolom untuk menyimpan path foto
             $table->json('titik_potensi')->nullable();
             $table->string('status')->default('pending');
+            $table->string('alamat')->default('-')->nullable(false); // Kolom alamat tidak boleh NULL, default '-'
             $table->timestamps();
         });
     }

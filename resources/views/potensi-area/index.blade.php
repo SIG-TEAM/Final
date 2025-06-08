@@ -54,7 +54,6 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Foto</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -80,6 +79,11 @@
                         <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-500">
                             <div>Lat: {{ number_format($area->latitude, 6) }}</div>
                             <div>Lng: {{ number_format($area->longitude, 6) }}</div>
+                            @if($area->alamat)
+                                <div class="mt-1 text-gray-700 text-xs"><b>Alamat:</b> {{ $area->alamat }}</div>
+                            @else
+                                <div class="mt-1 text-gray-400 text-xs"><b>Alamat:</b> <i>Tidak tersedia</i></div>
+                            @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             @if($area->status === 'pending')
@@ -97,39 +101,23 @@
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            @if($area->foto && $area->foto !== 'null')
+                            @if(!empty($area->foto) && $area->foto !== 'null')
                                 <img src="{{ asset('storage/' . $area->foto) }}" alt="Foto {{ e($area->nama) }}"
                                      class="h-12 w-12 object-cover rounded-md cursor-pointer hover:opacity-75"
+                                     onerror="this.onerror=null;this.src='{{ asset('images/no-image.png') }}';"
                                      onclick="showImageModal('{{ asset('storage/' . $area->foto) }}', '{{ addslashes($area->nama) }}')">
                             @else
-                                <span class="text-gray-400 text-sm">Tidak ada foto</span>
+                                <img src="{{ asset('images/no-image.png') }}" alt="Tidak ada foto"
+                                     class="h-12 w-12 object-cover rounded-md opacity-50">
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {{ $area->created_at ? $area->created_at->format('d/m/Y') : '-' }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <div class="flex space-x-2">
-                                <button onclick="focusOnMap({{ $area->latitude }}, {{ $area->longitude }}, '{{ addslashes($area->nama) }}')"
-                                        class="text-blue-600 hover:text-blue-900 text-sm">
-                                    Lihat di Peta
-                                </button>
-                                @if(auth()->user() && auth()->user()->role === 'pengurus')
-                                    @if($area->status === 'pending')
-                                        <form action="{{ route('potensi-area.approve', $area->id) }}" method="POST" class="inline">
-                                            @csrf
-                                            <button type="submit" class="text-green-600 hover:text-green-900 text-sm">
-                                                Setujui
-                                            </button>
-                                        </form>
-                                    @endif
-                                @endif
-                            </div>
-                        </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="9" class="px-6 py-4 text-center text-gray-500">
+                        <td colspan="8" class="px-6 py-4 text-center text-gray-500">
                             <div class="flex flex-col items-center justify-center py-8">
                                 <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
@@ -306,6 +294,7 @@
                 <p><strong>Kategori:</strong> ${area.kategori}</p>
                 <p><strong>Status:</strong> ${statusBadge}</p>
                 <p><strong>Deskripsi:</strong> ${area.deskripsi}</p>
+                <p><strong>Alamat:</strong> ${area.alamat ?? '-'}</p>
                 <p><strong>Koordinat:</strong> ${area.latitude.toFixed(6)}, ${area.longitude.toFixed(6)}</p>
                 <p><strong>Tanggal:</strong> ${area.created_at}</p>
                 ${area.foto ? `<img src='${area.foto}' alt='Foto ${area.nama.replace(/'/g, '&apos;')}' style='max-width:150px;max-height:100px;'/>` : ''}
@@ -355,6 +344,7 @@
                     nama: area.nama,
                     kategori: area.kategori,
                     deskripsi: area.deskripsi,
+                    alamat: area.alamat, // tambahkan alamat
                     latitude: parseFloat(area.latitude),
                     longitude: parseFloat(area.longitude),
                     foto: area.foto && area.foto !== 'null' ? asset('storage/' + area.foto) : '',

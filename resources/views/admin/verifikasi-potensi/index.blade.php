@@ -35,6 +35,7 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kategori</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Deskripsi</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Alamat</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lokasi</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Foto</th>
@@ -49,6 +50,7 @@
                                 <td class="px-6 py-4">{{ $item->nama }}</td>
                                 <td class="px-6 py-4">{{ $item->kategori }}</td>
                                 <td class="px-6 py-4">{{ $item->deskripsi }}</td>
+                                <td class="px-6 py-4">{{ $item->alamat ?? '-' }}</td>
                                 <td class="px-6 py-4">{{ $item->latitude }}, {{ $item->longitude }}</td>
                                 <td class="px-6 py-4">
                                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
@@ -104,6 +106,7 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kategori</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Deskripsi</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Alamat</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lokasi</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Foto</th>
@@ -117,6 +120,7 @@
                                 <td class="px-6 py-4">{{ $item->nama }}</td>
                                 <td class="px-6 py-4">{{ $item->kategori }}</td>
                                 <td class="px-6 py-4">{{ $item->deskripsi }}</td>
+                                <td class="px-6 py-4">{{ $item->alamat ?? '-' }}</td>
                                 <td class="px-6 py-4">{{ $item->latitude }}, {{ $item->longitude }}</td>
                                 <td class="px-6 py-4">
                                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Disetujui</span>
@@ -137,6 +141,7 @@
                                 <td class="px-6 py-4">{{ $item->nama }}</td>
                                 <td class="px-6 py-4">{{ $item->kategori }}</td>
                                 <td class="px-6 py-4">{{ $item->deskripsi }}</td>
+                                <td class="px-6 py-4">{{ $item->alamat ?? '-' }}</td>
                                 <td class="px-6 py-4">{{ $item->latitude }}, {{ $item->longitude }}</td>
                                 <td class="px-6 py-4">
                                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Ditolak</span>
