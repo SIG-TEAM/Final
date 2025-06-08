@@ -80,6 +80,11 @@
                         <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-500">
                             <div>Lat: {{ number_format($area->latitude, 6) }}</div>
                             <div>Lng: {{ number_format($area->longitude, 6) }}</div>
+                            @if($area->alamat)
+                                <div class="mt-1 text-gray-700 text-xs"><b>Alamat:</b> {{ $area->alamat }}</div>
+                            @else
+                                <div class="mt-1 text-gray-400 text-xs"><b>Alamat:</b> <i>Tidak tersedia</i></div>
+                            @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             @if($area->status === 'pending')
@@ -306,6 +311,7 @@
                 <p><strong>Kategori:</strong> ${area.kategori}</p>
                 <p><strong>Status:</strong> ${statusBadge}</p>
                 <p><strong>Deskripsi:</strong> ${area.deskripsi}</p>
+                <p><strong>Alamat:</strong> ${area.alamat ?? '-'}</p>
                 <p><strong>Koordinat:</strong> ${area.latitude.toFixed(6)}, ${area.longitude.toFixed(6)}</p>
                 <p><strong>Tanggal:</strong> ${area.created_at}</p>
                 ${area.foto ? `<img src='${area.foto}' alt='Foto ${area.nama.replace(/'/g, '&apos;')}' style='max-width:150px;max-height:100px;'/>` : ''}
@@ -355,6 +361,7 @@
                     nama: area.nama,
                     kategori: area.kategori,
                     deskripsi: area.deskripsi,
+                    alamat: area.alamat, // tambahkan alamat
                     latitude: parseFloat(area.latitude),
                     longitude: parseFloat(area.longitude),
                     foto: area.foto && area.foto !== 'null' ? asset('storage/' + area.foto) : '',

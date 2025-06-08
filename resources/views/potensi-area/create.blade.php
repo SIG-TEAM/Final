@@ -28,6 +28,19 @@
                             class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50">
                         <p class="hidden mt-1 text-sm text-red-600" id="nama-error">Silakan masukkan nama area.</p>
                     </div>
+
+                    <!-- Kolom alamat lengkap -->
+                    <div class="mb-4">
+                        <label for="alamat" class="block text-sm font-medium text-gray-700 after:content-['*'] after:text-red-500">
+                            Alamat Lengkap
+                        </label>
+                        <input type="text" id="alamat" name="alamat" required
+                            class="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50" readonly>
+                        <p class="mt-1 text-xs text-gray-500">
+                            Alamat akan terisi otomatis setelah Anda menentukan titik pada peta di bawah.
+                        </p>
+                        <p class="hidden mt-1 text-sm text-red-600" id="alamat-error">Silakan tentukan titik pada peta untuk mendapatkan alamat.</p>
+                    </div>
                     
                     <div class="mb-4">
                         <label for="kategori" class="block text-sm font-medium text-gray-700 after:content-['*'] after:text-red-500">
@@ -227,10 +240,17 @@
             var markerCoords = [layer.getLatLng().lng, layer.getLatLng().lat];
             document.getElementById('marker-coords').value = JSON.stringify(markerCoords);
             console.log('Titik Potensi:', markerCoords);
+
+            // Ambil alamat otomatis
+            fetchAddress(layer.getLatLng().lat, layer.getLatLng().lng);
         } else if (type === 'polygon') {
             var coordinates = layer.getLatLngs()[0].map(p => [p.lng, p.lat]);
             document.getElementById('polygon-coords').value = JSON.stringify(coordinates);
             console.log('Polygon:', coordinates);
+
+            // Ambil alamat dari center polygon
+            var center = layer.getBounds().getCenter();
+            fetchAddress(center.lat, center.lng);
         }
 
         drawnItems.addLayer(layer);
@@ -267,6 +287,8 @@
         var latlng = e.latlng;
         document.getElementById('latitude').value = latlng.lat;
         document.getElementById('longitude').value = latlng.lng;
+        // Ambil alamat otomatis
+        fetchAddress(latlng.lat, latlng.lng);
 
         // Update status
         const statusEl = document.getElementById('polygon-status');
@@ -274,6 +296,36 @@
         statusEl.classList.add('bg-green-50', 'border-green-400', 'text-green-700');
         statusEl.innerHTML = 'Titik koordinat berhasil ditentukan: ' + latlng.lat.toFixed(6) + ', ' + latlng.lng.toFixed(6);
         statusEl.classList.remove('hidden');
+    });
+
+    // Fungsi untuk reverse geocoding menggunakan Nominatim (OpenStreetMap)
+    function fetchAddress(lat, lng) {
+        const alamatInput = document.getElementById('alamat');
+        alamatInput.value = 'Mengambil alamat...';
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.display_name) {
+                    alamatInput.value = data.display_name;
+                } else {
+                    alamatInput.value = '-'; // Set default jika tidak ada alamat
+                }
+            })
+            .catch(() => {
+                alamatInput.value = '-'; // Set default jika gagal ambil alamat
+            });
+    }
+
+    // Pastikan kolom alamat tidak kosong saat submit
+    document.getElementById('area-form').addEventListener('submit', function(event) {
+        const alamatInput = document.getElementById('alamat');
+        if (!alamatInput.value || alamatInput.value === '-' || alamatInput.value === 'Mengambil alamat...') {
+            event.preventDefault();
+            alamatInput.classList.add('border-red-500');
+            alamatInput.classList.remove('border-gray-300');
+            document.getElementById('alamat-error').classList.remove('hidden');
+            alamatInput.focus();
+        }
     });
 
     // Resize map when window is resized

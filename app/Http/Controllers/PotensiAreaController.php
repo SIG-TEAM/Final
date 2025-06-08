@@ -30,6 +30,7 @@ class PotensiAreaController extends Controller
             'titik_potensi' => 'nullable',
             'latitude' => 'required',
             'longitude' => 'required',
+            'alamat' => 'required|string', // pastikan alamat tervalidasi
         ]);
 
         // Handle upload foto
@@ -37,7 +38,9 @@ class PotensiAreaController extends Controller
             $validated['foto'] = $request->file('foto')->store('potensi-area-foto', 'public');
         }
 
-        // Jangan isi is_approved, biarkan NULL
+        // Pastikan alamat diambil dari inputan form
+        $validated['alamat'] = $request->input('alamat', '-');
+
         \App\Models\PotensiArea::create($validated);
 
         return redirect()->route('potensi-area.index')->with('success', 'Potensi area berhasil ditambahkan.');
