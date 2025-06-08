@@ -32,7 +32,7 @@
                  x-transition:leave-start="translate-x-0"
                  x-transition:leave-end="-translate-x-full"
                  class="fixed left-0 z-30 flex-shrink-0 w-64 h-full text-white bg-green-700 rounded-r-xl"
-                 style="top:64px;">
+                 style="top:83px;">
                 <div class="flex items-center justify-between p-4 text-lg font-bold text-white bg-green-700 border-b border-gray-200 rounded-tr-xl">
                     <span>Admin Panel</span>
                     <button @click="sidebarOpen = false" class="text-white">
@@ -65,9 +65,9 @@
             <!-- Floating Hamburger Button -->
             <button 
                 @click="sidebarOpen = !sidebarOpen" 
-                class="fixed left-0 z-40 p-3 text-white transition-all duration-300 -translate-y-1/2 rounded-full top-1/2 hover:shadow-lg hover:bg-gray-700 focus:outline-none"
+                class="fixed left-0 z-40 p-3 text-white transition-all duration-300 -translate-y-1/2 rounded-full top-1/2 bg-green-700 focus:outline-none"
                 :class="{'translate-x-64': sidebarOpen}">
-                <svg class="w-5 h-5 text-black hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <svg class="w-5 h-5 text-white hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                 </svg>
             </button>
