@@ -173,15 +173,14 @@
     });
 
     // Batas koordinat sesuai restriction Google Maps
-    var southWest = L.latLng(-7.0183, 107.6390);
-    var northEast = L.latLng(-6.8583, 107.7990);
-    var bounds = L.latLngBounds(southWest, northEast);
+    // var southWest = L.latLng(-7.0183, 107.6390);
+    // var northEast = L.latLng(-6.8583, 107.7990);
+    // var bounds = L.latLngBounds(southWest, northEast);
 
-    // Inisialisasi map dengan batasan bounds
-    var map = L.map('map', {
-        maxBounds: bounds,
-        maxBoundsViscosity: 1.0 // Membuat map tidak bisa digeser keluar bounds
-    }).setView([-6.9383, 107.7190], 13);
+    // Inisialisasi map tanpa batasan bounds agar drag leluasa
+    var map = L.map('map'
+        // Hilangkan maxBounds dan maxBoundsViscosity agar peta bisa di-drag bebas
+    ).setView([-6.9383, 107.7190], 13);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
