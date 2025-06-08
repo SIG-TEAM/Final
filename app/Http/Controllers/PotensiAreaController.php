@@ -38,9 +38,6 @@ class PotensiAreaController extends Controller
             $validated['foto'] = $request->file('foto')->store('potensi-area-foto', 'public');
         }
 
-        // Pastikan alamat diambil dari inputan form
-        $validated['alamat'] = $request->input('alamat', '-');
-
         \App\Models\PotensiArea::create($validated);
 
         return redirect()->route('potensi-area.index')->with('success', 'Potensi area berhasil ditambahkan.');
