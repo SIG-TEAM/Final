@@ -14,7 +14,7 @@
         
         <div class="relative z-30 flex flex-col items-center justify-center px-12 py-12 w-auto max-w-lg bg-white/80 rounded-lg shadow-lg">
             <h1 class="text-5xl font-extrabold mb-4 text-gray-800 drop-shadow-lg">
-                Welcome to <span class="text-blue-400">Cileunyi Kulon</span>
+                Welcome to <span class="text-blue-400">Ciwidey</span>
             </h1>
             <p class="text-xl text-gray-600 mb-8 drop-shadow">
                 Discover amazing features and join our community today.<br>
