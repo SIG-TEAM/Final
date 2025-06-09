@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\VerifikasiPotensiController;
 use App\Http\Controllers\Pengurus\PengurusDashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\WelcomeController;
+use Illuminate\Http\Request;
 
 
 /*
@@ -102,5 +103,10 @@ Route::post('/admin/approve-role-change/{userId}', [ProfileController::class, 'a
 Route::get('/welcome', function () {
     return view('welcome');
 })->name('welcome');
+
+Route::get('/sidebar-area-info', function (Request $request) {
+    $area = json_decode($request->query('area', '{}'), true);
+    return view('components.sidebar-area-info', ['area' => $area])->render();
+});
 
 require __DIR__.'/auth.php';
