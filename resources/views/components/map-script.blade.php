@@ -4,7 +4,7 @@
     let currentMarker;
     let selectedLocation;
     let approved = {!! json_encode(isset($approvedAreas) ? $approvedAreas : []) !!};
-    const userRole = "{{ Auth::check() ? Auth::user()->role : '' }}";
+    const userRole = "{{ Auth::check() ? Auth::user()->role : 'guest' }}";
 
     function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
@@ -71,9 +71,8 @@
         map.addListener("click", function (event) {
             if (userRole === 'penduduk') {
                 addMarker(event.latLng);
-            } else {
-                alert("Anda tidak memiliki izin untuk menambahkan marker.");
             }
+            // Pengguna lain (termasuk yang tidak login) hanya bisa melihat data, tidak bisa menambah marker, dan tidak ada alert.
         });
     }
 
