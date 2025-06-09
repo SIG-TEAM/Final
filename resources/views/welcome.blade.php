@@ -14,7 +14,7 @@
 
     function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
-            center: { lat: -6.9383, lng: 107.7190 },
+            center: { lat: -7.0875, lng: 107.4500 }, // Geser lebih ke kanan (longitude lebih besar)
             zoom: 13,
             disableDefaultUI: true,
             styles: [
@@ -29,13 +29,12 @@
                     stylers: [{ visibility: "off" }]
                 }
             ],
-            // Hapus restriction jika ingin drag bebas, atau biarkan jika tetap ingin dibatasi
             restriction: {
                 latLngBounds: {
-                    north: -6.8583,
-                    south: -7.0183,
-                    west: 107.6390,
-                    east: 107.7990
+                    north: -7.0125,
+                    south: -7.1700,
+                    west: 107.3200,
+                    east: 107.5400
                 },
                 strictBounds: true
             }
