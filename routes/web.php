@@ -98,4 +98,9 @@ Route::post('/potensi-area', [PotensiAreaController::class, 'store'])->name('pot
 Route::post('/profile/request-role-change', [ProfileController::class, 'requestRoleChange'])->name('profile.requestRoleChange');
 Route::post('/admin/approve-role-change/{userId}', [ProfileController::class, 'approveRoleChange'])->name('profile.approveRoleChange');
 
+// Landing page (/) sudah ada
+Route::get('/welcome', function () {
+    return view('welcome');
+})->name('welcome');
+
 require __DIR__.'/auth.php';
