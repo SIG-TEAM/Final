@@ -10,7 +10,7 @@
 <div class="p-12 bg-white shadow sm:rounded-lg m-10 h-full min-h-screen">
     <!-- Back Button -->
     <div class="mb-6">
-        <a href="{{ route('kategori.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors duration-200">
+        <a href="{{ route('admin.kategori.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors duration-200">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
@@ -33,7 +33,7 @@
     <!-- Form -->
     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
         <div class="p-6 bg-white border-b border-gray-200">
-            <form action="{{ route('kategori.store') }}" method="POST">
+            <form action="{{ route('admin.kategori.store') }}" method="POST">
                 @csrf
                 
                 <div class="mb-4">

@@ -10,7 +10,7 @@
 <div class="p-12 bg-white shadow sm:rounded-lg m-10 h-full min-h-screen">
     <!-- Add New Button -->
     <div class="mb-6 flex justify-end">
-        <a href="{{ route('kategori.create') }}" class="px-4 py-2 bg-green-500 text-white rounded-md shadow hover:bg-green-600 transition-colors duration-200 flex items-center">
+        <a href="{{ route('admin.kategori.create') }}" class="px-4 py-2 bg-green-500 text-white rounded-md shadow hover:bg-green-600 transition-colors duration-200 flex items-center">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
             </svg>
@@ -45,14 +45,14 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
                         <div class="flex justify-center space-x-2">
-                            <a href="{{ route('kategori.edit', $item->id) }}" class="inline-flex items-center px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200">
+                            <a href="{{ route('admin.kategori.edit', $item->id) }}" class="inline-flex items-center px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                 </svg>
                                 Edit
                             </a>
                             
-                            <form action="{{ route('kategori.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus kategori ini?');">
+                            <form action="{{ route('admin.kategori.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus kategori ini?');">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="inline-flex items-center px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors duration-200">
@@ -73,7 +73,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
                             </svg>
                             <p class="text-lg">Belum ada data kategori</p>
-                            <a href="{{ route('kategori.create') }}" class="mt-3 px-4 py-2 bg-green-500 text-white rounded-md shadow hover:bg-green-600 transition-colors duration-200">
+                            <a href="{{ route('admin.kategori.create') }}" class="mt-3 px-4 py-2 bg-green-500 text-white rounded-md shadow hover:bg-green-600 transition-colors duration-200">
                                 Tambah Kategori Sekarang
                             </a>
                         </div>

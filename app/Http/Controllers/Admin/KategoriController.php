@@ -34,7 +34,7 @@ class KategoriController extends Controller
 
         if ($validator->fails()) {
             return redirect()
-                ->route('kategori.create')
+                ->route('admin.kategori.create')
                 ->withErrors($validator)
                 ->withInput();
         }
@@ -46,7 +46,7 @@ class KategoriController extends Controller
 
         // Redirect with success message
         return redirect()
-            ->route('kategori.index')
+            ->route('admin.kategori.index')
             ->with('success', 'Kategori berhasil ditambahkan!');
     }
 
@@ -77,7 +77,7 @@ class KategoriController extends Controller
 
         if ($validator->fails()) {
             return redirect()
-                ->route('kategori.edit', $id)
+                ->route('admin.kategori.edit', $id)
                 ->withErrors($validator)
                 ->withInput();
         }
@@ -89,7 +89,7 @@ class KategoriController extends Controller
 
         // Redirect with success message
         return redirect()
-            ->route('kategori.index')
+            ->route('admin.kategori.index')
             ->with('success', 'Kategori berhasil diperbarui!');
     }
 
@@ -105,7 +105,7 @@ class KategoriController extends Controller
             // Check if any potensi uses this kategori
             if ($kategori->potensi && $kategori->potensi->count() > 0) {
                 return redirect()
-                    ->route('kategori.index')
+                    ->route('admin.kategori.index')
                     ->with('error', 'Kategori tidak dapat dihapus karena masih digunakan oleh data potensi.');
             }
             
@@ -114,11 +114,11 @@ class KategoriController extends Controller
             
             // Redirect with success message
             return redirect()
-                ->route('kategori.index')
+                ->route('admin.kategori.index')
                 ->with('success', 'Kategori berhasil dihapus!');
         } catch (\Exception $e) {
             return redirect()
-                ->route('kategori.index')
+                ->route('admin.kategori.index')
                 ->with('error', 'Terjadi kesalahan saat menghapus kategori: ' . $e->getMessage());
         }
     }
